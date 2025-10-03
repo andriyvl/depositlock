@@ -1,0 +1,215 @@
+@import "./index.variables.css";
+
+/* DepositLock theme variables (HSL-based) for Tailwind integration */
+
+
+:root {
+  --font-family-main: 'Poppins';
+  --font-family-main-fallback: var(--font-family-system-fallback);
+  --background: 0 0% 100%;
+  --foreground: 220 20% 20%;
+
+  --card: 255 255% 255%;
+  --card-foreground: 220 20% 20%;
+
+  --popover: 255 255% 255%;
+  --popover-foreground: 220 20% 20%;
+
+  /* fix for reown wallet modal */
+  --w3m-z-index: 51;
+
+
+  /* Brand color scales - Lavender (Primary) */
+  --primary: 267 90% 75%; /* Base lavender */
+  --primary-foreground: 0 0% 100%;
+
+  --primary-50: 248 100% 98%;
+  --primary-100: 240 100% 94%;
+  --primary-200: 238 100% 88%;
+  --primary-300: 234 100% 80%;
+  --primary-400: 267 100% 70%;
+  --primary-500: 267 90% 75%;
+  --primary-600: 267 85% 60%;
+  --primary-700: 263 80% 45%;
+  --primary-800: 258 75% 35%;
+  --primary-900: 253 75% 25%;
+
+  /* Brand color scales - Mint (Secondary) */
+  --secondary: 173 70% 60%; /* Base mint */
+  --secondary-foreground: 45 90% 30%;
+
+  --secondary-50: 173 100% 96%;
+  --secondary-100: 173 100% 90%;
+  --secondary-200: 173 90% 82%;
+  --secondary-300: 173 80% 70%;
+  --secondary-400: 173 75% 65%;
+  --secondary-500: 173 70% 60%;
+  --secondary-600: 173 65% 50%;
+  --secondary-700: 173 60% 40%;
+  --secondary-800: 173 55% 30%;
+  --secondary-900: 173 50% 20%;
+
+  /* Brand color scales - Sky (Tertiary) */
+  --tertiary: 204 90% 62%; /* Base sky */
+  --tertiary-foreground: 198 89% 48%;
+
+  --tertiary-50: 204 100% 96%;
+  --tertiary-100: 204 100% 91%;
+  --tertiary-200: 204 98% 83%;
+  --tertiary-300: 204 95% 75%;
+  --tertiary-400: 204 92% 67%;
+  --tertiary-500: 204 90% 62%;
+  --tertiary-600: 204 85% 55%;
+  --tertiary-700: 204 80% 45%;
+  --tertiary-800: 204 75% 35%;
+  --tertiary-900: 204 70% 25%;
+
+  /* Brand color scales - Sunshine (Accent) */
+  --accent: 38 90% 58%; /* Base sunshine */
+  --accent-foreground: 35 90% 30%;
+
+  --accent-50: 38 100% 96%;
+  --accent-100: 38 100% 90%;
+  --accent-200: 38 98% 82%;
+  --accent-300: 38 95% 72%;
+  --accent-400: 38 92% 65%;
+  --accent-500: 38 90% 58%;
+  --accent-600: 38 85% 50%;
+  --accent-700: 38 80% 42%;
+  --accent-800: 38 75% 34%;
+  --accent-900: 38 70% 26%;
+
+  /* Brand color scales - Red (Destructive) */
+  --destructive: 0 90% 58%;
+  --destructive-foreground: 210 40% 98%;
+
+  --destructive-50: 0 100% 96%;
+  --destructive-100: 0 100% 90%;
+  --destructive-200: 0 98% 82%;
+  --destructive-300: 0 95% 72%;
+  --destructive-400: 0 92% 65%;
+  --destructive-500: 0 90% 58%;
+  --destructive-600: 0 85% 50%;
+  --destructive-700: 0 80% 42%;
+  --destructive-800: 0 75% 34%;
+  --destructive-900: 0 70% 26%;
+
+  --muted: 240 5% 96%;
+  --muted-foreground: 240 4% 46%;
+
+  --muted-50: 240 5% 96%;
+  --muted-100: 240 5% 90%;
+  --muted-200: 240 5% 82%;
+  --muted-300: 240 5% 72%;
+  --muted-400: 240 5% 65%;
+  --muted-500: 240 5% 58%;
+  --muted-600: 240 5% 50%;
+  --muted-700: 240 5% 42%;
+  --muted-800: 240 5% 34%;
+  --muted-900: 240 5% 26%;
+
+  --border: 240 6% 90%;
+  --input: 240 6% 90%;
+  --ring: 267 84% 81%;
+
+  --radius: 1rem;
+
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 240 5.3% 26.1%;
+  --sidebar-primary: 240 5.9% 10%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 240 4.8% 95.9%;
+  --sidebar-accent-foreground: 240 5.9% 10%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
+}
+
+.dark {
+  --background: 240 10% 8%;
+  --foreground: 240 5% 84%;
+
+  --card: 240 10% 12%;
+  --card-foreground: 240 5% 84%;
+
+  --popover: 240 10% 12%;
+  --popover-foreground: 240 5% 84%;
+
+  --primary: 267 90% 75%;
+  --primary-foreground: 240 10% 8%;
+
+  --secondary: 173 70% 60%;
+  --secondary-foreground: 173 25% 25%;
+
+  --tertiary: 204 90% 62%;
+  --tertiary-foreground: 204 50% 25%;
+
+  --accent: 38 90% 58%;
+  --accent-foreground: 35 50% 25%;
+
+  /* Dark mode brand color scales - Lavender (Primary) */
+  --primary-50: 253 75% 12%;
+  --primary-100: 258 75% 18%;
+  --primary-200: 263 75% 25%;
+  --primary-300: 267 80% 35%;
+  --primary-400: 267 85% 45%;
+  --primary-500: 267 90% 55%;
+  --primary-600: 267 90% 65%;
+  --primary-700: 267 95% 75%;
+  --primary-800: 267 98% 85%;
+  --primary-900: 267 100% 92%;
+
+  /* Dark mode brand color scales - Mint (Secondary) */
+  --secondary-50: 173 50% 12%;
+  --secondary-100: 173 55% 18%;
+  --secondary-200: 173 60% 25%;
+  --secondary-300: 173 65% 35%;
+  --secondary-400: 173 70% 45%;
+  --secondary-500: 173 75% 55%;
+  --secondary-600: 173 80% 65%;
+  --secondary-700: 173 85% 75%;
+  --secondary-800: 173 90% 85%;
+  --secondary-900: 173 95% 92%;
+
+  /* Dark mode brand color scales - Sky (Tertiary) */
+  --tertiary-50: 204 70% 12%;
+  --tertiary-100: 204 75% 18%;
+  --tertiary-200: 204 80% 25%;
+  --tertiary-300: 204 85% 35%;
+  --tertiary-400: 204 88% 45%;
+  --tertiary-500: 204 90% 55%;
+  --tertiary-600: 204 92% 65%;
+  --tertiary-700: 204 94% 75%;
+  --tertiary-800: 204 96% 85%;
+  --tertiary-900: 204 98% 92%;
+
+  /* Dark mode brand color scales - Sunshine (Accent) */
+  --accent-50: 38 70% 12%;
+  --accent-100: 38 75% 18%;
+  --accent-200: 38 80% 25%;
+  --accent-300: 38 85% 35%;
+  --accent-400: 38 88% 45%;
+  --accent-500: 38 90% 55%;
+  --accent-600: 38 92% 65%;
+  --accent-700: 38 94% 75%;
+  --accent-800: 38 96% 85%;
+  --accent-900: 38 98% 92%;
+
+  --muted: 240 5% 25%;
+  --muted-foreground: 240 5% 65%;
+
+  --destructive: 0 62% 50%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 240 5% 20%;
+  --input: 240 5% 20%;
+  --ring: 267 84% 81%;
+
+  --sidebar-background: 240 5.9% 10%;
+  --sidebar-foreground: 240 4.8% 95.9%;
+  --sidebar-primary: 224.3 76.3% 48%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent-foreground: 240 4.8% 95.9%;
+  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
+}

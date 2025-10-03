@@ -1,0 +1,7 @@
+.shared__container {
+    @apply max-w-[1200px] my-0;
+}
+
+.shared__card {
+    @apply flex shrink-0 flex-col items-start rounded-[--card-border-radius] border border-solid bg-[--card-bg] p-6 shadow-card;
+}

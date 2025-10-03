@@ -1,0 +1,48 @@
+
+/* Safari and iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+    /* iOS Safari specific styles */
+    html, body {
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  }
+  
+  /* Mobile viewport fixes */
+  html {
+    height: 100dvh;
+    overflow-x: hidden;
+  }
+  
+  body {
+    height: 100dvh;
+    overflow-x: hidden;
+    /* Prevent horizontal scroll on mobile */
+    position: relative;
+    width: 100dvw;
+  }
+  
+  /* Safari-specific background fixes */
+  @supports (-webkit-appearance: none) {
+    body {
+      background-attachment: scroll;
+      -webkit-background-size: cover;
+      background-size: cover;
+    }
+  }
+  
+  /* Fix for iOS safe areas */
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+      padding-top: max(0px, env(safe-area-inset-top));
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
+  }
+  
+  /* Custom gradient with subtle color bands */
+  .bg-custom-gradient {
+    background: linear-gradient(124deg, #fff 17% 19%, #fffd9d 61% 57.6%, #fdfdfd 71% 70%, #f3f5f5 72% 100%);
+  }

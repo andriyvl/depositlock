@@ -1,0 +1,166 @@
+
+flowchart TD
+
+%% === FRONTEND LAYER ===
+subgraph Frontend ["🖥️ Frontend Layer"]
+  HomePage[Homepage: SEO-optimized Next.js]
+  CreatorUI[Creator Flow: Stepper Form]
+  ContractUI[Contract View: Real-time Status]
+  DashboardUI[Dashboard: Role-based Management]
+  WalletComp[Wallet: Web3Modal + Multi-wallet]
+  
+  HomePage --> CreatorUI
+  HomePage --> ContractUI
+  CreatorUI --> WalletComp
+  ContractUI --> WalletComp
+  DashboardUI --> WalletComp
+end
+
+%% === HOOKS & STATE LAYER ===
+subgraph Hooks ["🔗 React Hooks & State"]
+  CreateHook[useCreateEscrow: Deploy contracts]
+  StatusHook[useEscrowStatus: Read blockchain data]
+  DepositHook[useDeposit: Send funds]
+  AuthHook[useAuth: Wallet connection state]
+  WalletHook[useWallet: Web3Modal integration]
+end
+
+%% === WEB3 LAYER ===
+subgraph Web3 ["⛓️ Web3 Integration"]
+  Ethers[Ethers.js v6: Provider/Signer]
+  ABI[Smart Contract ABI: Auto-generated]
+  Artifacts[Contract Artifacts: Hardhat compiled]
+  Validation[Address Validation: Checksum utils]
+  
+  Ethers --> ABI
+  ABI --> Artifacts
+  Ethers --> Validation
+end
+
+%% === BLOCKCHAIN LAYER ===
+subgraph Blockchain ["🔗 Polygon Amoy Testnet"]
+  Contract[Individual Escrow Contracts]
+  Storage[[On-chain Data: title, description, amount, deadline, status, addresses]]
+  Events[Contract Events: Created, Deposited, Released]
+  
+  Contract --> Storage
+  Contract --> Events
+end
+
+%% === INFRASTRUCTURE ===
+subgraph Infrastructure ["☁️ Infrastructure"]
+  RPC[Polygon Amoy RPC: Public endpoint]
+  Vercel[Vercel: Next.js hosting + CI/CD]
+  WalletConnect[WalletConnect: Multi-wallet support]
+  
+  RPC --> Contract
+  Vercel --> Frontend
+  WalletConnect --> WalletComp
+end
+
+%% === DEV ENVIRONMENT ===
+subgraph DevEnv ["🛠️ Development Environment"]
+  Hardhat[Hardhat: Contract compilation]
+  TypeScript[TypeScript: Type safety]
+  TailwindCSS[Tailwind: Mobile-first styling]
+  Shadcn[Shadcn/UI: Component library]
+  ESLint[ESLint: Code quality]
+  
+  Hardhat --> Artifacts
+  TypeScript --> Frontend
+  TailwindCSS --> Frontend
+  Shadcn --> Frontend
+end
+
+%% === CREATOR FLOW ===
+subgraph CreatorFlow ["👤 Creator Flow"]
+  CF1["Fill form: title, description, amount, deadline"]
+  CF2["Connect wallet via Web3Modal"]
+  CF3["Deploy individual contract"]
+  CF4["Get contract address"]
+  CF5["Share link to depositor"]
+  CF6["Monitor on dashboard"]
+  
+  CF1 --> CF2 --> CF3 --> CF4 --> CF5 --> CF6
+end
+
+%% === DEPOSITOR FLOW ===
+subgraph DepositorFlow ["💰 Depositor Flow"]
+  DF1["Open shared contract link"]
+  DF2["View contract details from blockchain"]
+  DF3["Connect wallet if not connected"]
+  DF4["Submit deposit transaction"]
+  DF5["Wait for confirmation"]
+  DF6["View updated status"]
+  
+  DF1 --> DF2 --> DF3 --> DF4 --> DF5 --> DF6
+end
+
+%% === DASHBOARD FLOW ===
+subgraph DashboardFlow ["📊 Dashboard Flow"]
+  D1["Connect wallet for authentication"]
+  D2["Fetch user's contracts from blockchain"]
+  D3["Filter by role: Creator/Depositor"]
+  D4["Display contract cards with real-time status"]
+  D5["Navigate to individual contracts"]
+  
+  D1 --> D2 --> D3 --> D4 --> D5
+end
+
+%% === RELEASE FLOW (MVP) ===
+subgraph ReleaseFlow ["🔓 Release Flow"]
+  R1["Check deadline passed"]
+  R2["Creator or Depositor triggers release"]
+  R3["Call release function"]
+  R4["Funds sent to depositor"]
+  R5["Status updated to Released"]
+  
+  R1 --> R2 --> R3 --> R4 --> R5
+end
+
+%% === DISPUTE FLOW (BASIC MVP) ===
+subgraph DisputeFlow ["⚠️ Basic Dispute Flow"]
+  Disp1["Flag dispute on contract"]
+  Disp2["Manual resolution process"]
+  Disp3["100% funds to one party"]
+  Disp4["Status updated to Disputed/Released"]
+  
+  Disp1 --> Disp2 --> Disp3 --> Disp4
+end
+
+%% === TECHNICAL CONNECTIONS ===
+CreatorUI --> CreateHook
+ContractUI --> StatusHook
+DashboardUI --> StatusHook
+WalletComp --> AuthHook
+WalletComp --> WalletHook
+
+CreateHook --> Ethers
+StatusHook --> Ethers
+DepositHook --> Ethers
+WalletHook --> Ethers
+
+Ethers --> RPC
+Events --> StatusHook
+
+CreatorFlow --> CreateHook
+DepositorFlow --> DepositHook
+DashboardFlow --> StatusHook
+ReleaseFlow --> Ethers
+
+%% === STATUS TRANSITIONS ===
+Created[Status: Created] --> Filled[Status: Filled]
+Filled --> Released[Status: Released]
+Filled --> Disputed[Status: Disputed]
+Created --> Canceled[Status: Canceled]
+
+%% === STYLING ===
+classDef flowBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+classDef techBox fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+classDef blockchainBox fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+classDef infraBox fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+
+class CreatorFlow,DepositorFlow,DashboardFlow,ReleaseFlow,DisputeFlow flowBox
+class Frontend,Hooks,Web3,DevEnv techBox
+class Blockchain blockchainBox
+class Infrastructure infraBox

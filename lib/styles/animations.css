@@ -1,0 +1,60 @@
+.animation-default {
+    @apply transition-all duration-500 ease-in-out
+}
+
+.gradient-animation-base {
+    background-size: 250% 100%;
+    background-position: left;
+    @apply animation-default;
+}
+
+/* TWO COLORS GRADIENT */
+
+.double-gradient-button-primary {
+    background-image: linear-gradient(to right, var(--primary-gradient-1), var(--primary-gradient-2), var(--primary-gradient-1), var(--primary-gradient-2));
+    @apply gradient-animation-base;
+}
+
+.double-gradient-button-primary:hover {
+    background-position: right;
+}
+
+.double-gradient-button-secondary {
+    background-image: linear-gradient(to right, var(--secondary-gradient-1), var(--secondary-gradient-2), var(--secondary-gradient-1), var(--secondary-gradient-2));
+    @apply gradient-animation-base;
+}
+
+.double-gradient-button-secondary:hover {
+    background-position: right;
+}
+
+.double-gradient-button-tertiary {
+    background-image: linear-gradient(to right, var(--tertiary-gradient-1), var(--tertiary-gradient-2), var(--tertiary-gradient-1), var(--tertiary-gradient-2));
+    @apply gradient-animation-base;
+}
+
+.double-gradient-button-tertiary:hover {
+    background-position: right;
+}
+
+
+/* WRITERESSAY BUBBLE BUTTON GRADIENT ANIMATION*/
+
+.bubble-gradient-button-primary {
+    background: linear-gradient(180deg, var(--white-opace-02) 0%, var(--invisible) 100%), var(--primary-gradient-1);
+    @apply animation-default;
+}
+
+ .bubble-gradient-button-primary:hover {
+    /* TODO: Animation effect */
+    background: var(--primary);
+}
+
+.bubble-gradient-button-secondary {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.00) 100%), var(--secondary-gradient-1);
+    @apply gradient-animation-base;
+}
+
+.bubble-gradient-button-secondary:hover {
+    background: var(--secondary);
+}

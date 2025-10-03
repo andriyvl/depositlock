@@ -1,0 +1,3 @@
+.textarea-reset {
+    @apply resize-none outline-none;
+}

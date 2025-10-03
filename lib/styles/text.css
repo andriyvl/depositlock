@@ -1,0 +1,8 @@
+.text-ellipsis-no-wrap {
+    @apply whitespace-nowrap overflow-hidden text-ellipsis;
+}
+
+textarea, p, div {
+    /* color: var(--gun-powder-grey);
+    text-align: start; */
+}

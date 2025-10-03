@@ -1,0 +1,188 @@
+---
+config:
+  layout: dagre
+---
+flowchart TD
+    Start(["Start"]) -- /creator --> CreateContract["Create Deposit Agreement Page"]
+    Start -- /dashboard --> Dashboard["Dashboard Page"]
+    Start -- contract/entry --> n3["Contract Entry Page"]
+    Start -- contract/&lt;address&gt; --> GoToContractPage["Contract Page"]
+    WalletCheck{"Is wallet connected?"} -- No --> ClickConnect["Click connect in header"]
+    WalletCheck -- Yes --> WalletShown["Wallet address shown in header"]
+    ClickConnect --> ConnectWallet["Connect Wallet"]
+    ConnectWallet --> WalletShown
+    EnterContract["Enter contract information"] --> n5["Review contract"]
+    Submit@{ label: "Click 'Deploy Contract'" } --> BlockchainCreated["Contract created on Blockchain"]
+    BlockchainCreated --> StoreDB["Store in DB wallet address contractId"]
+    StoreDB --> GoToContract["Go to Contract page"]
+    GoToContract --> GoToContractPage
+    ReleaseFunds["Release funds"] --> EnterDescription["Enter description and release amount"]
+    CancelContract["Cancel contract"] --> ShowCancelled1["Show Cancelled status"]
+    OpenDispute["Open dispute"] --> EnterDispute["Enter dispute reason, proposed release amount"]
+    EnterDispute --> n14@{ label: "Click 'Submit Dispute'" }
+    WaitRelease["Wait for Creator action"] --> ShowReleasedStatus["Show Released status &amp; details"] & ShowDisputedStatus["Show Disputed status"]
+    PasteContract["Paste Contract URL"] -- contract/&lt;address&gt; --> GoToContractPage
+    RetrieveBlockchain["Retrieve from blockchain and show Agreement data"] --> ShowDetails["Show contract details"]
+    ShowDetails --> DepositStatus{"Deposit status:"} & n11@{ label: "Click 'View on Explorer'" }
+    DepositStatus -- Created --> ShowCreated["Show Created status"]
+    DepositStatus -- Filled --> ShowFilledStatus["Show Filled status"]
+    DepositStatus -- Released --> ShowReleasedStatus
+    DepositStatus -- Disputed --> ShowDisputedStatus
+    ShowCreated --> n10["Is contract creator?"]
+    FillDeposit@{ label: "Click 'Deposit'" } --> ConfirmTransaction["Confirm Web3 transaction"]
+    Dashboard --> CreateDepositContract@{ label: "Click 'Create Deposit Agreement'" } & GetContractsDB["Get contracts data from DB by Wallet address"] & AddExisting@{ label: "Click 'Add existing agreement'" } & WalletCheck
+    CreateDepositContract --> CreateContract
+    GetContractsDB --> ContractsTabs["Show Contracts list tabs: All Depositor Creator"]
+    ContractsTabs --> ContractCard["Contract details Card"]
+    ContractCard --> CopyClipboard["Copy URL/contract address to clipboard"] & n12["View"]
+    AddExisting --> EnterAddress["Enter contract address"]
+    EnterAddress -- Found &amp; Added to list --> ContractsTabs
+    ShowFilledStatus --> n13["Is Contract Creator?"]
+    Start -- / --> n1["Homepage"]
+    n1 --> WalletCheck & n2@{ label: "Click 'Fill Deposit'" } & CreateDepositContract & CreateContract
+    n1 -- /dashboard --> Dashboard
+    CreateContract --> n6["Connect Wallet step"]
+    n3 --> n9["Connect Wallet"]
+    ShowCancelled1 --> n4(["Agreement flow completed"])
+    n5 --> Submit
+    n6 --> n7["Is Wallet connected?"]
+    n7 -- Yes --> EnterContract
+    n7 -- No --> n8["Untitled Node"]
+    n2 --> n3
+    n9 --> PasteContract
+    GoToContractPage --> RetrieveBlockchain
+    n10 -- No --> FillDeposit
+    n10 -- Yes --> CancelContract & n15["Wait for Depositor fills funds"]
+    n12 --> GoToContractPage
+    ConfirmTransaction --> ShowFilledStatus
+    n13 -- Yes --> OpenDispute & ReleaseFunds
+    n14 --> ShowDisputedStatus
+    ShowDisputedStatus --> DepositorNegotiate["Creator manually reaches out counterparty for negotiation"]
+    ShowReleasedStatus --> n4
+    EnterDescription --> ShowReleasedStatus
+    DepositStatus -- Canceled --> ShowCancelled1
+    n13 -- No --> WaitRelease
+    DepositorNegotiate --> ReleaseFunds
+    n15 --> ShowFilledStatus
+    n10 --> n16["Copy contract address to clipboard"]
+    n16 --> n17["Send link or contract address manually to Depositor"]
+    CreateContract@{ shape: display}
+    Dashboard@{ shape: display}
+    n3@{ shape: display}
+    GoToContractPage@{ shape: display}
+    WalletShown@{ shape: display}
+    ConnectWallet@{ shape: rect}
+    Submit@{ shape: rect}
+    BlockchainCreated@{ shape: lean-r}
+    StoreDB@{ shape: lean-r}
+    EnterDescription@{ shape: lean-r}
+    ShowCancelled1@{ shape: display}
+    EnterDispute@{ shape: lean-r}
+    n14@{ shape: rect}
+    WaitRelease@{ shape: delay}
+    ShowReleasedStatus@{ shape: display}
+    ShowDisputedStatus@{ shape: display}
+    PasteContract@{ shape: lean-r}
+    RetrieveBlockchain@{ shape: lean-r}
+    ShowDetails@{ shape: display}
+    n11@{ shape: rect}
+    ShowCreated@{ shape: display}
+    ShowFilledStatus@{ shape: display}
+    n10@{ shape: diam}
+    FillDeposit@{ shape: rect}
+    CreateDepositContract@{ shape: rect}
+    GetContractsDB@{ shape: lean-r}
+    AddExisting@{ shape: rect}
+    ContractsTabs@{ shape: display}
+    ContractCard@{ shape: display}
+    EnterAddress@{ shape: lean-r}
+    n13@{ shape: diam}
+    n1@{ shape: display}
+    n2@{ shape: rect}
+    n9@{ shape: rect}
+    n7@{ shape: diam}
+    n8@{ shape: stop}
+    n15@{ shape: delay}
+    DepositorNegotiate@{ shape: trap-t}
+    n16@{ shape: rect}
+    n17@{ shape: trap-t}
+     Start:::startNode
+     CreateContract:::processYellow
+     CreateContract:::successGreen
+     Dashboard:::processYellow
+     Dashboard:::successGreen
+     n3:::successGreen
+     GoToContractPage:::processYellow
+     GoToContractPage:::successGreen
+     WalletCheck:::decisionOrange
+     ClickConnect:::processYellow
+     WalletShown:::successGreen
+     ConnectWallet:::processBlue
+     ConnectWallet:::processYellow
+     EnterContract:::processYellow
+     n5:::processYellow
+     Submit:::processYellow
+     BlockchainCreated:::processBlue
+     StoreDB:::processBlue
+     GoToContract:::processYellow
+     ReleaseFunds:::processYellow
+     EnterDescription:::errorRed
+     EnterDescription:::processBlue
+     CancelContract:::errorRed
+     CancelContract:::processYellow
+     ShowCancelled1:::errorRed
+     ShowCancelled1:::successGreen
+     OpenDispute:::errorRed
+     OpenDispute:::processYellow
+     EnterDispute:::errorRed
+     EnterDispute:::processBlue
+     n14:::processYellow
+     WaitRelease:::pinkProcess
+     ShowReleasedStatus:::pinkProcess
+     ShowReleasedStatus:::successGreen
+     ShowDisputedStatus:::errorRed
+     ShowDisputedStatus:::successGreen
+     PasteContract:::processYellow
+     PasteContract:::processBlue
+     RetrieveBlockchain:::processBlue
+     ShowDetails:::successGreen
+     DepositStatus:::decisionOrange
+     n11:::processYellow
+     ShowCreated:::successGreen
+     ShowFilledStatus:::successGreen
+     n10:::decisionOrange
+     FillDeposit:::processYellow
+     ConfirmTransaction:::processBlue
+     ConfirmTransaction:::processYellow
+     CreateDepositContract:::processYellow
+     GetContractsDB:::processBlue
+     AddExisting:::processYellow
+     ContractsTabs:::successGreen
+     ContractCard:::successGreen
+     CopyClipboard:::successGreen
+     CopyClipboard:::processYellow
+     n12:::decisionOrange
+     n12:::processYellow
+     EnterAddress:::processYellow
+     EnterAddress:::processBlue
+     n13:::decisionOrange
+     n1:::processYellow
+     n1:::successGreen
+     n2:::processYellow
+     n6:::processYellow
+     n9:::processYellow
+     n4:::startNode
+     n7:::decisionOrange
+     n15:::pinkProcess
+     DepositorNegotiate:::errorRed
+     DepositorNegotiate:::Peach
+     n16:::processYellow
+     n17:::Peach
+    classDef errorRed fill:#f44336,stroke:#333,stroke-width:2px,color:#fff
+    classDef startNode fill:#e91e63, stroke:#333, stroke-width:2px, color:#fff
+    classDef processBlue fill:#87ceeb, stroke:#333, stroke-width:2px, color:#000
+    classDef decisionOrange fill:#ff9800, stroke:#333, stroke-width:2px, color:#000
+    classDef successGreen fill:#4caf50, stroke:#333, stroke-width:2px, color:#fff
+    classDef pinkProcess fill:#ff69b4, stroke:#333, stroke-width:2px, color:#fff
+    classDef processYellow fill:#ffc107, stroke:#333, stroke-width:2px, color:#000
+    classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D

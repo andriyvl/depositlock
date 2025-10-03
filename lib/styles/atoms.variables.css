@@ -1,0 +1,317 @@
+:host, :root {
+    /* SHADOWS */
+    --card-shadow-color: rgba(0, 0, 0, 0.24);
+    --card-shadow: 0px 2px 2px 0px var(--card-shadow-color);
+
+    --floating-card-shadow-color: rgba(0, 0, 0, 0.25);
+    --floating-card-shadow: 0px 2px 8px 0px var(--floating-card-shadow-color);
+
+    /* TODO: put gradients here? */
+
+    /* TEXT & ICON & BACKGROUND & BORDER */
+    --clickable-text-color: var(--primary);
+    --light-label-text: var(--stone-grey);
+    --placeholder-text: var(--metal-grey);
+    --accent-text: var(--primary);
+    --default-text: var(--gun-powder-grey);
+    --active-label-text: var(--white-grey);
+    --default-label-text: var(--gun-powder-grey);
+    --icon-color: var(--primary);
+
+    --active-bg: var(--gun-powder-grey);
+    --active-border: var(--gun-powder-grey);
+    --active-border-hover: var(--stone-grey);
+
+    --outline: var(--color-0);
+    --outline-hover: var(--outline);
+    --outline-border: var(--primary);
+    --outline-border-hover: var(--primary-hover);
+    --outline-foreground: var(--primary);
+    --outline-foreground-hover: var(--outline-foreground);
+
+    --default-bg: var(--light-fog-grey);
+    --default-bg-hover: var(--light-grey);
+    --default-border: var(--fog-grey);
+    --default-border-hover: var(--ash-grey);
+    --default-menu-bg: var(--white-grey);
+    --defailt-menu-border: var(--light-grey);
+    --area-bg: var(--color-0);
+
+    /* TABS */
+    --fields-tab-active-border: var(--primary);
+    --fields-tab-active-text: var(--primary);
+    --fields-tab-inactive-border: var(--silver-grey);
+    --fields-tab-inactive-text: var(--default-text);
+    --fields-tab-hover-text: var(--primary);
+
+    /* SCROLLBAR */
+    --scrollbar-thumb: var(--odd-gray);
+    --scrollbar-thumb-hover: var(--ash-grey);
+
+    /* BANNER */
+    --banner: var(--pale-yellow);
+    --banner-foreground: var(--gun-powder-grey);
+
+    /* CARD */
+    --card-bg: var(--color-0);
+    --card-border-radius: 24px;
+
+    /* FLOATING CARD */
+    --floating-card-bg: var(--default-menu-bg);
+    --floating-card-border: var(--defailt-menu-border);
+    --floating-card-label: var(--default-label-text);
+    --floating-card-foreground: var(--primary);
+
+    /* DROPDOWN */
+    --dropdown: var(--default-bg);
+    --dropdown-border: var(--default-border);
+    --dropdown-border-w: 1px;
+    --dropdown-border-hover: var(--default-border-hover);
+    --dropdown-text: var(--default-label-text);
+
+    --dropdown-menu: var(--default-menu-bg);
+    --dropdown-menu-border: var(--defailt-menu-border);
+    --dropdown-menu-border-w: 1px;
+
+    --dropdown-item-hovered: var(--primary);
+    --dropdown-text-hovered: var(--primary-foreground);
+    --dropdown-sm-border-radius: 24px;
+    --dropdown-md-border-radius: 24px;
+    --dropdown-lg-border-radius: 24px;
+
+    --dropdown-sm-padding-right: 8px;
+    --dropdown-sm-padding-left: 12px;
+    --dropdown-sm-padding-y: 4px;
+    --dropdown-md-padding-right: 12px;
+    --dropdown-md-padding-left: 12px;
+    --dropdown-md-padding-y: 6px;
+    --dropdown-lg-padding-right: 12px;
+    --dropdown-lg-padding-left: 12px;
+    --dropdown-lg-padding-y: 6px;
+    --dropdown-sm-height: 32px;
+    --dropdown-md-height: 40px;
+    --dropdown-lg-height: 48px;
+
+    --dropdown-menu-sm-border-radius: 16px;
+    --dropdown-menu-md-border-radius: 16px;
+    --dropdown-menu-lg-border-radius: 16px;
+
+    --dropdown-icon-container-width: 20px;
+    --dropdown-icon-container-height: 20px;
+    --dropdown-icon-width: 20px;
+    --dropdown-icon-height: 20px;
+
+    /* TOGGLE */
+    --toggle-bg: var(--default-bg);
+    --toggle-border: var(--default-border);
+    --toggle-border-hover: var(--default-border-hover);
+    --toggle-circle-inactive: var(--inactive);
+    --toggle-circle-active: var(--primary);
+
+    /* BADGE */
+    --badge-active: var(--primary);
+    --badge-active-hover: var(--badge-active);
+    --badge-active-border: var(--badge-active);
+    --badge-active-border-hover: var(--badge-active);
+    --badge-active-foreground: var(--primary-foreground);
+    --badge-active-foreground-hover: var(--primary-foreground);
+    --badge-radius: 24px;
+
+    --badge-inactive: var(--outline);
+    --badge-inactive-hover: var(--outline);
+    --badge-inactive-border: var(--ash-grey);
+    --badge-inactive-border-hover: var(--gun-powder-grey);
+    --badge-inactive-foreground: var(--default-label-text);
+    --badge-inactive-foreground-hover: var(--default-label-text);
+
+    --badge-select-text: var(--gun-powder-grey);
+
+    /* BADGE TABS (black/white) */
+    --badge-bw-active-bg: var(--active-bg);
+    --badge-bw-active-text: var(--active-label-text);
+    --badge-bw-active-border: var(--active-border);
+    --badge-bw-active-border-hover: var(--active-border-hover);
+
+    --badge-bw-bg: var(--default-bg);
+    --badge-bw-text: var(--default-label-text);
+    --badge-bw-border: var(--default-border);
+    --badge-bw-border-hover: var(--default-border-hover);
+
+    /* BADGE BUTTON*/
+    --badge-button-sm-padding-x: 12px;
+    --badge-button-sm-padding-y: 4px;
+    --badge-button-sm-rounded: 6px;
+    --badge-button-md-padding-x: 16px;
+    --badge-button-md-padding-y: 4px;
+    --badge-button-md-rounded: 10px;
+
+    --badge-button-bg-light: var(--color-0);
+    --badge-button-bg-light-hover: var(--color-0);
+    --badge-button-text-light: var(--gun-powder-grey);
+    --badge-button-text-light-hover: var(--gun-powder-grey);
+    --badge-button-border-light: var(--invisible);
+    --badge-button-border-light-hover: var(--invisible);
+    --badge-button-bg-light-muted: var(--white-grey);
+    --badge-button-bg-light-muted-hover: var(--white-grey);
+    --badge-button-text-light-muted: var(--gun-powder-grey);
+    --badge-button-text-light-muted-hover: var(--gun-powder-grey);
+
+    --badge-button-bg-dark: var(--light-fog-grey);
+    --badge-button-bg-dark-hover: var(--light-fog-grey);
+    --badge-button-text-dark: var(--gun-powder-grey);
+    --badge-button-text-dark-hover: var(--gun-powder-grey);
+    --badge-button-border-dark: var(--invisible);
+    --badge-button-border-dark-hover: var(--invisible);
+    --badge-button-bg-dark-muted: var(--white-grey);
+    --badge-button-bg-dark-muted-hover: var(--white-grey);
+    --badge-button-text-dark-muted: var(--gun-powder-grey);
+    --badge-button-text-dark-muted-hover: var(--gun-powder-grey);
+
+    /* TEXTAREA */
+    --textarea-field-bg: var(--violet-opace-72);
+    --textarea-field-border: var(--violet-opace-32);
+    --textarea-field-border-hover: var(--slate-blue);
+    --textarea-field-border-error: var(--deep-red);
+    --textarea-field-text: var(--gun-powder-grey);
+    --textarea-field-placeholder: var(--gun-powder-grey);
+    --textarea-progress-bar: var(--emerald-green);
+    --textarea-progress-bar-error: var(--deep-red);
+    --textarea-progress-bar-track: var(--emerald-green-opace-10);
+    --textarea-progress-bar-track-error: var(--deep-red-opace-10);
+    --textarea-field-bg-readonly: var(--light-soft-fog-grey);
+    --textarea-field-text-readonly: var(--gun-powder-grey);
+    --textarea-field-clear-button-stroke: var(--gray-stone-dark);
+
+    --textarea-field-drawer-bg: var(--color-0);
+
+    /* FILTERS */
+
+    --filters-drawer-bg: var(--color-0);
+
+    /* SHARE MODAL */
+    --share-modal-divider-bg: var(--ash-soft-grey);
+    /* INPUT */
+    --input-bg: var(--light-fog-grey);
+    --input-radius: 16px;
+    --input-bg-readonly: var(--light-fog-grey);
+    --input-border-readonly: var(--fog-grey);
+
+    /* TAG */
+    --tag-bg: var(--white-grey);
+    --tag-text: var(--outline-foreground);
+    --tag-border: none;
+    --tag-border-hover: none;
+
+    /* BUTTONS */
+    --button-primary: var(--primary);
+    --button-primary-hover: var(--primary-hover);
+    --buttom-primary-active: var(--primary-active);
+    --button-primary-shadow: none;
+    --button-primary-shadow-hover: none;
+    --button-primary-border: var(--primary-border);
+    --button-primary-border-hover: var(--primary-border-hover);
+    --button-primary-foreground: var(--primary-foreground);
+    --button-primary-foreground-hover: var(--primary-foreground-hover);
+    --button-primary-gradient-1: var(--primary-gradient-1); /* gradient colors may be one or many */
+    --button-primary-gradient-2: var(--primary-gradient-2);
+
+    --button-primary-muted: var(--default-bg);
+    --button-primary-muted-hover: var(--default-bg-hover);
+    --button-primary-muted-border: var(--default-border);
+    --button-primary-muted-foreground: var(--placeholder-text);
+    --button-primary-muted-foreground-hover: var(--placeholder-text);
+
+    --button-secondary: var(--secondary);
+    --button-secondary-hover: var(--secondary-hover);
+    --button-secondary-active: var(--secondary-active);
+    --button-secondary-shadow: none;
+    --button-secondary-shadow-hover: none;
+    --button-secondary-border: var(--secondary-border);
+    --button-secondary-border-hover: var(--secondary-border-hover);
+    --button-secondary-foreground: var(--secondary-foreground);
+    --button-secondary-foreground-hover: var(--secondary-foreground-hover);
+    --button-secondary-gradient-1: var(--secondary-gradient-1); /* gradient colors may be one or many */
+    --button-secondary-gradient-2: var(--secondary-gradient-2);
+
+    --button-secondary-muted: var(--default-bg);
+    --button-secondary-muted-hover: var(--default-bg-hover);
+    --button-secondary-muted-border: var(--default-border);
+    --button-secondary-muted-foreground: var(--placeholder-text);
+    --button-secondary-muted-foreground-hover: var(--placeholder-text);
+
+    --button-tertiary: var(--tertiary);
+    --button-tertiary-hover: var(--tertiary-hover);
+    --button-tertiary-active: var(--tertiary-active);
+    --button-tertiary-shadow: none;
+    --button-tertiary-shadow-hover: none;
+    --button-tertiary-border: var(--tertiary-border);
+    --button-tertiary-border-hover: var(--tertiary-border-hover);
+    --button-tertiary-foreground: var(--tertiary-foreground);
+    --button-tertiary-foreground-hover: var(--tertiary-foreground-hover);
+    --button-tertiary-gradient-1: var(--tertiary-gradient-1); /* gradient colors may be one or many */
+    --button-tertiary-gradient-2: var(--tertiary-gradient-2);
+
+    --button-tertiary-muted: var(--default-bg);
+    --button-tertiary-muted-hover: var(--default-bg-hover);
+    --button-tertiary-muted-border: var(--default-border);
+    --button-tertiary-muted-foreground: var(--placeholder-text);
+    --button-tertiary-muted-foreground-hover: var(--placeholder-text);
+
+    --button-outline: var(--outline);
+    --button-outline-hover: var(--outline);
+    --button-outline-shadow: none;
+    --button-outline-shadow-hover: none;
+    --button-outline-border: var(--outline-border);
+    --button-outline-border-hover: var(--outline-border-hover);
+    --button-outline-foreground: var(--outline-foreground);
+    --button-outline-foreground-hover: var(--outline-foreground-hover);
+
+    --button-outline-border-muted: var(--default-border);
+    --button-outline-border-muted-hover: var(--default-border-hover);
+    --button-outline-foreground-muted: var(--default-label-text);
+    --button-outline-foreground-muted-hover: var(--light-label-text);
+
+
+    /* TODO: border width vars not working. need find out a way to fix*/
+    --button-sm-border-width: 1px;
+    --button-md-border-width: 1px;
+    --button-lg-border-width: 1px;
+
+    --button-sm-border-radius: 10px;
+    --button-md-border-radius: 10px;
+    --button-lg-border-radius: 10px;
+    --button-sm-x-padding: 12px;
+    --button-md-x-padding: 16px;
+    --button-lg-x-padding: 20px;
+    --button-sm-y-padding: 4px;
+    --button-md-y-padding: 4px;
+    --button-lg-y-padding: 8px;
+
+
+    --icon-button-bg: var(--light-fog-grey);
+    --icon-button-bg-hover: var(--light-fog-grey);
+    --icon-button-radius: 24px;
+    --icon-button-sm-padding: 6px;
+    --icon-button-md-padding: 8px;
+    --icon-button-lg-padding: 10px;
+
+    --left-arrow-button-text: var(--gun-powder-grey);
+    --left-arrow-button-bg: var(--default-bg);
+
+    --carousel-button-bg: var(--light-fog-grey);
+    --carousel-button-radius: 100%;
+    --carousel-button-text: var(--gun-powder-grey);
+
+    /* MODAL */
+    --modal-wrapper-bg: rgba(0, 0, 0, 0.5);
+    --modal-content-bg: var(--color-0);
+    --modal-content-max-width: 32rem;
+    --modal-content-rounded: 1.5rem;
+    --modal-content-padding: 1.5rem;
+    --modal-header-title-size: 1.875rem;
+    --modal-header-title-weight: 500;
+    --modal-header-spacing: 1rem;
+
+    /* TOAST NOTIFICATION */
+    --toast-text: white;
+}
