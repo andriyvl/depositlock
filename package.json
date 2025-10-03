@@ -25,12 +25,12 @@
     "@reown/appkit": "^1.8.0",
     "@reown/appkit-adapter-ethers": "^1.8.0",
     "@supabase/supabase-js": "^2.43.4",
+    "ethers": "^6.11.1",
     "next": "15.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "zod": "^3.23.8",
-    "zustand": "^4.5.2",
-    "ethers": "^6.11.1"
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.9.0",
