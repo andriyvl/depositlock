@@ -42,7 +42,7 @@ export const Tooltip = ({
       {visible && (
         <div
           style={{ zIndex: tooltipZIndex }}
-          className={cn(`text-default absolute whitespace-nowrap text-label rounded-lg bg-[--card-background-color] border border-solid px-3 py-2 text-sm shadow-floating
+          className={cn(`text-default absolute whitespace-nowrap text-label rounded-lg bg-[--card-bg] border border-solid px-3 py-2 text-sm shadow-floating
           ${
             position === 'top'
               ? 'bottom-full left-1/2 mb-2 -translate-x-1/2'
