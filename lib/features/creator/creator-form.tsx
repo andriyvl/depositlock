@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -72,10 +72,16 @@ export function CreatorForm() {
   const [deploymentEstimate, setDeploymentEstimate] = useState<DeploymentEstimate | null>(null);
   const [isEstimatingCost, setIsEstimatingCost] = useState(false);
   const [estimateError, setEstimateError] = useState<string | null>(null);
+  const [deployError, setDeployError] = useState<string | null>(null);
   const auth = useAuth();
   const { createContract, estimateDeploymentCost } = useContract();
   const wallet = useWallet();
   const { addContract } = useContracts();
+  const estimateDeploymentCostRef = useRef(estimateDeploymentCost);
+
+  useEffect(() => {
+    estimateDeploymentCostRef.current = estimateDeploymentCost;
+  }, [estimateDeploymentCost]);
 
   const progress = (currentStep / 4) * 100;
 
@@ -134,6 +140,8 @@ export function CreatorForm() {
 
   const handleDeploy = async () => {
     setIsDeploying(true);
+    setDeployError(null);
+    let deployedAddress: string | null = null;
     try {
       const onSelectedNetwork = await wallet.ensureNetwork?.(formData.networkId);
       if (onSelectedNetwork === false) {
@@ -143,7 +151,7 @@ export function CreatorForm() {
       const deadlineTimestamp = Math.floor(deadlineDate.getTime() / 1000);
 
       // Deploy real contract - using ZeroAddress for open access
-      const deployedAddress = await createContract(
+      deployedAddress = await createContract(
         formData.amount,
         deadlineTimestamp,
         formData.title,
@@ -156,7 +164,7 @@ export function CreatorForm() {
       }
 
       // Add the contract to user's tracking
-      addContract({
+      await addContract({
         contractAddress: deployedAddress,
         role: 'creator',
         networkId: formData.networkId,
@@ -164,8 +172,19 @@ export function CreatorForm() {
 
       setContractAddress(deployedAddress);
       setCurrentStep(4);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to deploy contract:", error);
+      if (deployedAddress) {
+        setContractAddress(deployedAddress);
+        setCurrentStep(4);
+        setDeployError(
+          `Contract was deployed at ${deployedAddress}, but dashboard sync failed. Add it manually from dashboard (network: ${getNetworkDisplayName(formData.networkId)}).`
+        );
+      } else {
+        setDeployError(
+          error?.message || "Failed to deploy contract."
+        );
+      }
     } finally {
       setIsDeploying(false);
     }
@@ -196,12 +215,14 @@ export function CreatorForm() {
     const description = formData.description.trim() || "Secure deposit agreement created via DepositLock";
 
     let isCancelled = false;
-    const timeout = setTimeout(async () => {
-      setIsEstimatingCost(true);
+    const runEstimate = async (isInitial: boolean) => {
+      if (isInitial) {
+        setIsEstimatingCost(true);
+      }
       setEstimateError(null);
 
       try {
-        const estimate = await estimateDeploymentCost(
+        const estimate = await estimateDeploymentCostRef.current(
           formData.amount,
           effectiveDeadline,
           title,
@@ -215,7 +236,6 @@ export function CreatorForm() {
         }
       } catch (error: any) {
         if (!isCancelled) {
-          setDeploymentEstimate(null);
           setEstimateError(error?.message || "Unable to estimate deployment cost.");
         }
       } finally {
@@ -223,11 +243,16 @@ export function CreatorForm() {
           setIsEstimatingCost(false);
         }
       }
-    }, 450);
+    };
+
+    runEstimate(true);
+    const intervalId = setInterval(() => {
+      runEstimate(false);
+    }, 5000);
 
     return () => {
       isCancelled = true;
-      clearTimeout(timeout);
+      clearInterval(intervalId);
     };
   }, [
     formData.amount,
@@ -236,7 +261,6 @@ export function CreatorForm() {
     formData.description,
     formData.networkId,
     formData.currency,
-    estimateDeploymentCost,
   ]);
 
   return (
@@ -290,6 +314,18 @@ export function CreatorForm() {
           </CardHeader>
 
           <CardContent className="space-y-6">
+            {deployError && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="flex items-start space-x-3">
+                  <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-red-800">Deployment Sync Error</h4>
+                    <p className="text-sm text-red-700 mt-1">{deployError}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {currentStep === 1 && (
               <div className="space-y-6">
                 <div className="text-center">

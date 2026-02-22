@@ -35,18 +35,23 @@ export async function addContract(
     throw new Error('User address is required')
   }
 
-  const { error } = await supabase.from('user_contracts').insert([
-    {
-      user_address: userAddress.toLowerCase(),
-      contract_address: contract.contractAddress,
-      network_id: contract.networkId,
-      role: contract.role,
-    },
-  ])
+  const { error } = await supabase
+    .from('user_contracts')
+    .upsert(
+      [
+        {
+          user_address: userAddress.toLowerCase(),
+          contract_address: contract.contractAddress.toLowerCase(),
+          network_id: contract.networkId,
+          role: contract.role,
+        },
+      ],
+      { onConflict: 'user_address,contract_address' }
+    )
 
   if (error) {
     console.error('Error adding contract:', error)
-    throw new Error('Failed to add contract')
+    throw new Error(`Failed to add contract: ${error.message}`)
   }
 
   revalidatePath('/dashboard')
