@@ -1,10 +1,9 @@
 // Ensure AppKit is initialized before using hooks
-import { useAppKit, useAppKitAccount, useAppKitProvider, useAppKitState, useDisconnect } from '@reown/appkit/react';
+import { useAppKit, useAppKitAccount, useAppKitProvider, useAppKitState } from '@reown/appkit/react';
 import { ethers } from 'ethers';
 import { getReadonlyProvider } from '../provider/appkit.client';
 import { useState, useEffect, useCallback } from 'react';
-import { polygon } from '@reown/appkit/networks';
-import { SupportedNetworkIds } from '@/lib/model/network.config';
+import { NETWORK_CONFIGS, SupportedNetworkIds } from '@/lib/model/network.config';
 
 
 export function useWallet() {
@@ -12,7 +11,6 @@ export function useWallet() {
   const { address, isConnected } = useAppKitAccount();
   const { selectedNetworkId } = useAppKitState();
   const { walletProvider } = useAppKitProvider('eip155');
-  const { disconnect } = useDisconnect();
 
   const [provider, setProvider] = useState<ethers.BrowserProvider | ethers.JsonRpcProvider | undefined>(
     getReadonlyProvider()
@@ -40,27 +38,45 @@ export function useWallet() {
     }
   }, [signer]);
 
-  const ensurePolygonNetwork = useCallback(async (): Promise<boolean> => {
+  const ensureNetwork = useCallback(async (networkId: SupportedNetworkIds): Promise<boolean> => {
     try {
       if (!walletProvider) return true; // read-only
-      if (selectedNetworkId === SupportedNetworkIds.polygon) return true;
-      
+      if (selectedNetworkId === networkId) return true;
+
+      const chainConfig = NETWORK_CONFIGS[networkId];
+      if (!chainConfig) {
+        throw new Error(`Unsupported network: ${networkId}`);
+      }
+
       await (walletProvider as any).request?.({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: `0x${polygon.id.toString(16)}` }]
+        params: [{ chainId: `0x${chainConfig.id.toString(16)}` }]
       });
       return true;
     } catch (switchError: any) {
       // Try to add chain then switch
       try {
+        const chainConfig = NETWORK_CONFIGS[networkId];
+        if (!chainConfig) return false;
+
+        const rpcUrls = chainConfig.rpcUrls?.default?.http || [];
+        const explorerUrl = chainConfig.blockExplorers?.default?.url;
+        if (!rpcUrls.length) return false;
+
         await (walletProvider as any).request?.({
           method: 'wallet_addEthereumChain',
-          params: [polygon]
+          params: [{
+            chainId: `0x${chainConfig.id.toString(16)}`,
+            chainName: chainConfig.name,
+            nativeCurrency: chainConfig.nativeCurrency,
+            rpcUrls,
+            ...(explorerUrl ? { blockExplorerUrls: [explorerUrl] } : {}),
+          }]
         });
         return true;
       } catch (addError) {
         // eslint-disable-next-line no-console
-        console.error('Failed to add/switch to Polygon network', addError);
+        console.error(`Failed to add/switch network ${networkId}`, addError);
         return false;
       }
     }
@@ -81,6 +97,6 @@ export function useWallet() {
     getSigner: () => signer,
     getAddress,
     selectedNetworkId,
-    ensurePolygonNetwork
+    ensureNetwork
   };
 }

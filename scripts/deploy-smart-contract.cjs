@@ -11,10 +11,19 @@ async function main() {
   console.log("Deployer:", deployer.address);
   
   const balance = await deployer.provider.getBalance(deployer.address);
-  console.log("Deployer Balance:", ethers.formatEther(balance), "POL");
+  console.log("Deployer Balance:", ethers.formatEther(balance), "native");
 
   // Environment-specific configurations
   const configs = {
+    // Ethereum Mainnet
+    1: {
+      name: "Ethereum Mainnet",
+      currency: "ETH",
+      defaultAmount: "100",
+      defaultDeadlineHours: 168, // 7 days
+      explorer: "https://etherscan.io",
+      networkId: "eip155:1",
+    },
     // Polygon Mainnet
     137: {
       name: "Polygon Mainnet",
@@ -33,6 +42,33 @@ async function main() {
       explorer: "https://www.oklink.com/amoy",
       networkId: "eip155:80002",
     },
+    // Arbitrum One
+    42161: {
+      name: "Arbitrum One",
+      currency: "ETH",
+      defaultAmount: "100",
+      defaultDeadlineHours: 168,
+      explorer: "https://arbiscan.io",
+      networkId: "eip155:42161",
+    },
+    // Optimism Mainnet
+    10: {
+      name: "Optimism Mainnet",
+      currency: "ETH",
+      defaultAmount: "100",
+      defaultDeadlineHours: 168,
+      explorer: "https://optimistic.etherscan.io",
+      networkId: "eip155:10",
+    },
+    // Base Mainnet
+    8453: {
+      name: "Base Mainnet",
+      currency: "ETH",
+      defaultAmount: "100",
+      defaultDeadlineHours: 168,
+      explorer: "https://basescan.org",
+      networkId: "eip155:8453",
+    },
   };
 
   const tokenConfigs = {
@@ -42,7 +78,7 @@ async function main() {
         decimals: 6,
       },
       USDT: {
-        address: "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+        address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
         decimals: 6,
       },
     },
@@ -56,11 +92,51 @@ async function main() {
         decimals: 6,
       },
     },
+    1: {
+      USDC: {
+        address: "0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        decimals: 6,
+      },
+      USDT: {
+        address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        decimals: 6,
+      },
+    },
+    42161: {
+      USDC: {
+        address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        decimals: 6,
+      },
+      USDT: {
+        address: "0xFd086bC7CD5C481DCC9C85ebe478A1C0b69FCbb9",
+        decimals: 6,
+      },
+    },
+    10: {
+      USDC: {
+        address: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+        decimals: 6,
+      },
+      USDT: {
+        address: "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+        decimals: 6,
+      },
+    },
+    8453: {
+      USDC: {
+        address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        decimals: 6,
+      },
+      USDT: {
+        address: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+        decimals: 6,
+      },
+    },
   };
 
   const config = configs[chainId] || {
     name: "Unknown Network",
-    currency: "POL",
+    currency: "ETH",
     defaultAmount: "100",
     defaultDeadlineHours: 24,
     explorer: "Unknown",

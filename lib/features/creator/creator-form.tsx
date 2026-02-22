@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +14,7 @@ import { useAuth } from "@/lib/features/auth/auth.hook";
 import { useWallet } from "@/lib/features/web3/wallet/wallet.hook";
 import { useContract } from "@/lib/features/shared/contract.hook";
 import {
-  NETWORK_CONFIGS,
+  DEPLOYMENT_NETWORKS,
   getSupportedCurrencies,
   getNetworkDisplayName,
   getDefaultCurrency,
@@ -49,6 +49,14 @@ interface FormData {
   networkId: SupportedNetworkIds;
 }
 
+interface DeploymentEstimate {
+  gasLimit: string;
+  gasPriceGwei: string;
+  l1DataFeeNative: string;
+  totalFeeNative: string;
+  nativeSymbol: string;
+}
+
 export function CreatorForm() {
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [formData, setFormData] = useState<FormData>({
@@ -61,8 +69,11 @@ export function CreatorForm() {
   });
   const [isDeploying, setIsDeploying] = useState(false);
   const [contractAddress, setContractAddress] = useState<string>("");
+  const [deploymentEstimate, setDeploymentEstimate] = useState<DeploymentEstimate | null>(null);
+  const [isEstimatingCost, setIsEstimatingCost] = useState(false);
+  const [estimateError, setEstimateError] = useState<string | null>(null);
   const auth = useAuth();
-  const { createContract } = useContract();
+  const { createContract, estimateDeploymentCost } = useContract();
   const wallet = useWallet();
   const { addContract } = useContracts();
 
@@ -124,9 +135,9 @@ export function CreatorForm() {
   const handleDeploy = async () => {
     setIsDeploying(true);
     try {
-      const onPolygon = await wallet.ensurePolygonNetwork?.();
-      if (onPolygon === false) {
-        throw new Error('Please switch to Polygon network');
+      const onSelectedNetwork = await wallet.ensureNetwork?.(formData.networkId);
+      if (onSelectedNetwork === false) {
+        throw new Error(`Please switch to ${getNetworkDisplayName(formData.networkId)}`);
       }
       const deadlineDate = new Date(formData.deadline);
       const deadlineTimestamp = Math.floor(deadlineDate.getTime() / 1000);
@@ -167,6 +178,66 @@ export function CreatorForm() {
   const handleCopyContractAddress = async () => {
     await copyContractAddress(contractAddress);
   };
+
+  useEffect(() => {
+    const amountValue = Number(formData.amount);
+    if (!Number.isFinite(amountValue) || amountValue <= 0) {
+      setDeploymentEstimate(null);
+      setEstimateError(null);
+      setIsEstimatingCost(false);
+      return;
+    }
+
+    const effectiveDeadline = formData.deadline
+      ? Math.floor(new Date(formData.deadline).getTime() / 1000)
+      : Math.floor(Date.now() / 1000) + 7 * 24 * 3600;
+
+    const title = formData.title.trim() || "Deposit Agreement";
+    const description = formData.description.trim() || "Secure deposit agreement created via DepositLock";
+
+    let isCancelled = false;
+    const timeout = setTimeout(async () => {
+      setIsEstimatingCost(true);
+      setEstimateError(null);
+
+      try {
+        const estimate = await estimateDeploymentCost(
+          formData.amount,
+          effectiveDeadline,
+          title,
+          description,
+          formData.networkId,
+          formData.currency
+        );
+
+        if (!isCancelled) {
+          setDeploymentEstimate(estimate);
+        }
+      } catch (error: any) {
+        if (!isCancelled) {
+          setDeploymentEstimate(null);
+          setEstimateError(error?.message || "Unable to estimate deployment cost.");
+        }
+      } finally {
+        if (!isCancelled) {
+          setIsEstimatingCost(false);
+        }
+      }
+    }, 450);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timeout);
+    };
+  }, [
+    formData.amount,
+    formData.deadline,
+    formData.title,
+    formData.description,
+    formData.networkId,
+    formData.currency,
+    estimateDeploymentCost,
+  ]);
 
   return (
     <div className="min-h-screen">
@@ -378,22 +449,40 @@ export function CreatorForm() {
                   <select
                     id="network"
                     value={formData.networkId}
-                    disabled
                     onChange={(e) => handleInputChange('networkId', e.target.value)}
                     className="mt-1 w-full px-3 py-2 bg-background border border-input rounded-md text-sm"
                   >
-                    {Object.entries(NETWORK_CONFIGS).map(([key, config]) => (
-                      <option key={key} value={key}>
-                        {config.displayName}{config.testnet ? ' (Testnet)' : ''}
+                    {DEPLOYMENT_NETWORKS.map((networkId) => (
+                      <option key={networkId} value={networkId}>
+                        {getNetworkDisplayName(networkId)}
                       </option>
                     ))}
                   </select>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {NETWORK_CONFIGS[formData.networkId]?.testnet
-                      ? 'Testnet for development and testing'
-                      : 'Production network with real value'
-                    }
+                    This controls where the contract is deployed and where users will deposit.
                   </p>
+                </div>
+
+                <div className="bg-muted/50 border border-border rounded-lg p-4">
+                  <h4 className="font-medium mb-2">Estimated Deployment Cost</h4>
+                  {isEstimatingCost ? (
+                    <p className="text-sm text-muted-foreground">Estimating network fee...</p>
+                  ) : estimateError ? (
+                    <p className="text-sm text-destructive">{estimateError}</p>
+                  ) : deploymentEstimate ? (
+                    <div className="space-y-1 text-sm text-muted-foreground">
+                      <p className="text-foreground font-medium">
+                        ~{deploymentEstimate.totalFeeNative} {deploymentEstimate.nativeSymbol}
+                      </p>
+                      <p>Gas limit: {deploymentEstimate.gasLimit}</p>
+                      <p>Gas price: {Number(deploymentEstimate.gasPriceGwei).toFixed(2)} gwei</p>
+                      {Number(deploymentEstimate.l1DataFeeNative) > 0 && (
+                        <p>L1 data fee: {deploymentEstimate.l1DataFeeNative} {deploymentEstimate.nativeSymbol}</p>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">Enter amount and network to see an estimate.</p>
+                  )}
                 </div>
 
                 <div className="bg-secondary-50 border border-secondary-200 rounded-lg p-4">
@@ -427,6 +516,7 @@ export function CreatorForm() {
                     <h4 className="font-medium text-secondary-800 mb-2">Network & Creator</h4>
                     <div className="space-y-1 text-sm text-secondary-700">
                       <div><span className="text-muted-foreground">Network:</span> {getNetworkDisplayName(formData.networkId)}</div>
+                      <div><span className="text-muted-foreground">Estimated deploy cost:</span> {deploymentEstimate ? `~${deploymentEstimate.totalFeeNative} ${deploymentEstimate.nativeSymbol}` : 'Estimating...'}</div>
                       <div><span className="text-muted-foreground">Creator:</span> <span className="font-mono">{auth.user?.address.slice(0, 6)}...{auth.user?.address.slice(-4)}</span></div>
                       <div><span className="text-muted-foreground">Access:</span> Open to any wallet</div>
                     </div>

@@ -3,7 +3,7 @@
 import React from 'react';
 import { createAppKit } from '@reown/appkit/react';
 import { EthersAdapter } from '@reown/appkit-adapter-ethers';
-import { polygon } from '@reown/appkit/networks';
+import { polygon, arbitrum, optimism, base, mainnet } from '@reown/appkit/networks';
 
 const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID as string;
 if (!projectId) {
@@ -27,7 +27,7 @@ createAppKit({
   adapters: [new EthersAdapter()],
   metadata,
   projectId,
-  networks: [polygon],
+  networks: [polygon, arbitrum, optimism, base, mainnet],
   themeVariables: {
     '--w3m-z-index': 51,
   }

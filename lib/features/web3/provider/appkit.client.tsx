@@ -8,6 +8,8 @@ const RPC_BY_NETWORK: Record<SupportedNetworkIds, string> = {
   [SupportedNetworkIds.polygonAmoy]: process.env.NEXT_PUBLIC_RPC_AMOY || 'https://rpc-amoy.polygon.technology/',
   [SupportedNetworkIds.ethereum]: process.env.NEXT_PUBLIC_RPC_ETHEREUM || 'https://eth.llamarpc.com',
   [SupportedNetworkIds.arbitrum]: process.env.NEXT_PUBLIC_RPC_ARBITRUM || 'https://arb1.arbitrum.io/rpc',
+  [SupportedNetworkIds.optimism]: process.env.NEXT_PUBLIC_RPC_OPTIMISM || 'https://mainnet.optimism.io',
+  [SupportedNetworkIds.base]: process.env.NEXT_PUBLIC_RPC_BASE || 'https://mainnet.base.org',
 };
 
 export function getReadonlyRpcUrl(networkId: SupportedNetworkIds = SupportedNetworkIds.polygon): string {

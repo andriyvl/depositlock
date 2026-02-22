@@ -1,4 +1,4 @@
-import { polygonAmoy, polygon, mainnet, arbitrum, Assign, Chain } from '@reown/appkit/networks';
+import { polygonAmoy, polygon, mainnet, arbitrum, optimism, base, Assign, Chain } from '@reown/appkit/networks';
 
 export enum ChainNamespace {
   EVM = 'eip155',
@@ -10,6 +10,8 @@ export enum ChainNamespace {
 export enum EthereumChainId {
   polygonAmoy = 80002,
   polygon = 137,
+  optimism = 10,
+  base = 8453,
   ethereum = 1,
   arbitrum = 42161,
 }
@@ -28,6 +30,8 @@ export interface AppNetworkConfig extends Assign<Chain<undefined>, Chain> {
 export enum SupportedNetworkIds {
   polygonAmoy = `${ChainNamespace.EVM}:${EthereumChainId.polygonAmoy}`,
   polygon = `${ChainNamespace.EVM}:${EthereumChainId.polygon}`,
+  optimism = `${ChainNamespace.EVM}:${EthereumChainId.optimism}`,
+  base = `${ChainNamespace.EVM}:${EthereumChainId.base}`,
   ethereum = `${ChainNamespace.EVM}:${EthereumChainId.ethereum}`,
   arbitrum = `${ChainNamespace.EVM}:${EthereumChainId.arbitrum}`,
 }
@@ -62,7 +66,58 @@ const APP_NETWORK_CONFIG: Record<SupportedNetworkIds, Partial<AppNetworkConfig>>
       {
         symbol: 'USDT',
         name: 'Tether USD',
-        address: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
+        address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+        decimals: 6,
+      },
+    ],
+  },
+  [SupportedNetworkIds.arbitrum]: {
+    displayName: 'Arbitrum One',
+    supportedTokens: [
+      {
+        symbol: 'USDC',
+        name: 'USD Coin',
+        address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+        decimals: 6,
+      },
+      {
+        symbol: 'USDT',
+        name: 'Tether USD',
+        address: '0xFd086bC7CD5C481DCC9C85ebe478A1C0b69FCbb9',
+        decimals: 6,
+      },
+    ],
+  },
+  [SupportedNetworkIds.optimism]: {
+    displayName: 'Optimism',
+    supportedTokens: [
+      {
+        symbol: 'USDC',
+        name: 'USD Coin',
+        address: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
+        decimals: 6,
+      },
+      {
+        symbol: 'USDT',
+        name: 'Tether USD',
+        address: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
+        decimals: 6,
+      },
+    ],
+  },
+  [SupportedNetworkIds.base]: {
+    displayName: 'Base',
+    supportedTokens: [
+      {
+        symbol: 'USDC',
+        name: 'USD Coin',
+        address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+        decimals: 6,
+      },
+      {
+        symbol: 'USDT',
+        name: 'Tether USD',
+        address: '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2',
         decimals: 6,
       },
     ],
@@ -79,37 +134,8 @@ const APP_NETWORK_CONFIG: Record<SupportedNetworkIds, Partial<AppNetworkConfig>>
       {
         symbol: 'USDT',
         name: 'Tether USD',
-        address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+        address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
         decimals: 6,
-      },
-      {
-        symbol: 'DAI',
-        name: 'Dai Stablecoin',
-        address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-        decimals: 18,
-      },
-    ],
-  },
-  [SupportedNetworkIds.arbitrum]: {
-    displayName: 'Arbitrum (Low Fees)',
-    supportedTokens: [
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-        decimals: 6,
-      },
-      {
-        symbol: 'USDT',
-        name: 'Tether USD',
-        address: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
-        decimals: 6,
-      },
-      {
-        symbol: 'DAI',
-        name: 'Dai Stablecoin',
-        address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
-        decimals: 18,
       },
     ],
   },
@@ -119,8 +145,10 @@ const APP_NETWORK_CONFIG: Record<SupportedNetworkIds, Partial<AppNetworkConfig>>
 const BASE_CONFIGS = {
   [SupportedNetworkIds.polygonAmoy]: polygonAmoy,
   [SupportedNetworkIds.polygon]: polygon,
-  [SupportedNetworkIds.ethereum]: mainnet,
   [SupportedNetworkIds.arbitrum]: arbitrum,
+  [SupportedNetworkIds.optimism]: optimism,
+  [SupportedNetworkIds.base]: base,
+  [SupportedNetworkIds.ethereum]: mainnet,
 };
 
 
@@ -137,6 +165,14 @@ export const NETWORK_CONFIGS: Record<SupportedNetworkIds, AppNetworkConfig> = Ob
   }
   return acc;
 }, {} as Record<SupportedNetworkIds, AppNetworkConfig>);
+
+export const DEPLOYMENT_NETWORKS: SupportedNetworkIds[] = [
+  SupportedNetworkIds.polygon,
+  SupportedNetworkIds.arbitrum,
+  SupportedNetworkIds.optimism,
+  SupportedNetworkIds.base,
+  SupportedNetworkIds.ethereum,
+];
 
 
 export function getNetworkConfig(networkId: SupportedNetworkIds): AppNetworkConfig | undefined {

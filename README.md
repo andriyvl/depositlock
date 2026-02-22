@@ -32,7 +32,7 @@ CONTRACT_TOKEN_SYMBOL="USDC"
 # CONTRACT_TOKEN_DECIMALS="6"
 ```
 
-Deploy to Polygon mainnet:
+Deploy to any supported EVM mainnet (`polygon`, `ethereum`, `arbitrum`, `optimism`, `base`):
 
 ```bash
 npx hardhat run scripts/deploy-smart-contract.cjs --network polygon
@@ -41,6 +41,7 @@ npx hardhat run scripts/deploy-smart-contract.cjs --network polygon
 ## Interacting with the Application
 
 1.  Connect your wallet.
-2.  Create a new agreement by navigating to the `/creator` page and selecting a supported stablecoin.
-3.  Deposit funds into the agreement by navigating to the `/agreement/[id]` page.
-4.  Release the funds after the deadline has passed.
+2.  Create a new agreement by navigating to the `/creator` page, selecting a network and stablecoin (`USDC`/`USDT`).
+3.  Review the estimated deployment cost shown for the selected network.
+4.  Deposit funds into the agreement by navigating to the `/agreement/[id]` page.
+5.  Release the funds after the deadline has passed.

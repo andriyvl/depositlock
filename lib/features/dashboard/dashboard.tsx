@@ -16,7 +16,7 @@ import { formatDateShort, getDaysUntilDeadline } from "@/lib/helpers/date.helper
 
 import { verifyUserRole, copyContractAddress } from "@/lib/helpers/contract.helpers";
 import { AgreementStatus, AgreementStatusName } from "@/lib/model/agreement.types";
-import { SupportedNetworkIds } from "@/lib/model/network.config";
+import { DEPLOYMENT_NETWORKS, getNetworkDisplayName, SupportedNetworkIds } from "@/lib/model/network.config";
 import { StatusWidgets } from "./components/status-widgets";
 
 
@@ -24,6 +24,7 @@ export function Dashboard() {
   const [activeTab, setActiveTab] = useState("all");
   const [showAddContract, setShowAddContract] = useState(false);
   const [contractAddress, setContractAddress] = useState("");
+  const [addContractNetworkId, setAddContractNetworkId] = useState<SupportedNetworkIds>(SupportedNetworkIds.polygon);
 
   const [validationMessage, setValidationMessage] = useState("");
   const [statusFilter, setStatusFilter] = useState<AgreementStatusName | "all">("all");
@@ -39,6 +40,12 @@ export function Dashboard() {
   useEffect(() => {
     fetchAgreements();
   }, [fetchAgreements]);
+
+  useEffect(() => {
+    if (user?.networkId) {
+      setAddContractNetworkId(user.networkId);
+    }
+  }, [user?.networkId]);
 
   const handleAddContract = async () => {
     if (!contractAddress.trim()) {
@@ -60,7 +67,7 @@ export function Dashboard() {
     setValidationMessage("🔍 Verifying contract...");
     
     try {
-      const networkId = user.networkId || SupportedNetworkIds.polygon;
+      const networkId = addContractNetworkId;
       const role = await verifyUserRole(contractAddress.trim(), user.address, networkId);
 
       if (role) {
@@ -207,6 +214,21 @@ export function Dashboard() {
                     placeholder="0x..."
                     className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Network</label>
+                  <select
+                    value={addContractNetworkId}
+                    onChange={(e) => setAddContractNetworkId(e.target.value as SupportedNetworkIds)}
+                    className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  >
+                    {DEPLOYMENT_NETWORKS.map((networkId) => (
+                      <option key={networkId} value={networkId}>
+                        {getNetworkDisplayName(networkId)}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 
                 {validationMessage && (
