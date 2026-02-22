@@ -6,7 +6,7 @@ import EscrowArtifacts from '../../../artifacts/contracts/Escrow.sol/Escrow.json
 import { escrowABI } from '../../model/escrow.config';
 import { getReadonlyProvider } from '../web3/provider/appkit.client';
 import { BlockchainContract } from '@/lib/model/agreement.types';
-import { getNetworkConfig, getTokenConfig, SupportedNetworkIds } from '../../model/network.config';
+import { DEPLOYMENT_NETWORKS, getNetworkConfig, getTokenConfig, SupportedNetworkIds } from '../../model/network.config';
 
 const erc20Abi = [
   'function allowance(address owner, address spender) view returns (uint256)',
@@ -29,6 +29,38 @@ type DeploymentCostEstimate = {
 
 export function useContract() {
   const wallet = useWallet();
+
+  const resolveContractNetwork = async (
+    contractAddress: string,
+    preferredNetworkId?: SupportedNetworkIds
+  ): Promise<SupportedNetworkIds> => {
+    const candidates = [
+      preferredNetworkId,
+      ...DEPLOYMENT_NETWORKS,
+      SupportedNetworkIds.polygonAmoy,
+    ].filter(Boolean) as SupportedNetworkIds[];
+
+    const seen = new Set<string>();
+    const uniqueCandidates = candidates.filter((candidate) => {
+      if (seen.has(candidate)) return false;
+      seen.add(candidate);
+      return true;
+    });
+
+    for (const networkId of uniqueCandidates) {
+      try {
+        const provider = getReadonlyProvider(networkId);
+        const code = await provider.getCode(contractAddress);
+        if (code && code !== '0x') {
+          return networkId;
+        }
+      } catch {
+        // Try the next network candidate.
+      }
+    }
+
+    return preferredNetworkId || SupportedNetworkIds.polygon;
+  };
 
   const getDeploymentRequest = async (
     amount: string,
@@ -224,7 +256,8 @@ export function useContract() {
     contractAddress: string,
     networkId: SupportedNetworkIds = SupportedNetworkIds.polygon
   ): Promise<BlockchainContract> => {
-    const provider = getReadonlyProvider(networkId);
+    const resolvedReadNetworkId = await resolveContractNetwork(contractAddress, networkId);
+    const provider = getReadonlyProvider(resolvedReadNetworkId);
     const contract = new ethers.Contract(contractAddress, escrowABI, provider);
 
     const [
@@ -280,7 +313,7 @@ export function useContract() {
     };
 
     const resolvedNetworkId =
-      (contractNetworkId as SupportedNetworkIds) || networkId;
+      (contractNetworkId as SupportedNetworkIds) || resolvedReadNetworkId;
 
     return {
       contractAddress,
