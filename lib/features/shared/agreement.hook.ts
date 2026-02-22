@@ -2,6 +2,7 @@
 
 import { mapToAgreement, verifyUserRole } from '@/lib/helpers/contract.helpers';
 import { User, UserDatabaseContract } from '@/lib/model/agreement.types';
+import { SupportedNetworkIds } from '@/lib/model/network.config';
 import { getContracts } from './db-contracts/contracts.actions';
 import { useAppStore } from '../store/app.store';
 import { useContract } from './contract.hook';
@@ -24,18 +25,20 @@ export function useAgreement(contractAddress: string, user: User) {
     setCurrentAgreement(null);
 
     try {
-      const blockchainContract = await getContract(contractAddress);
-      
       let userDbContract: UserDatabaseContract | undefined;
       if (user?.address) {
           const dbContracts = await getContracts(user.address);
           userDbContract = dbContracts.find(c => c.contractAddress.toLowerCase() === contractAddress.toLowerCase());
       }
 
+      const preferredNetworkId =
+        userDbContract?.networkId || user?.networkId || SupportedNetworkIds.polygon;
+      const blockchainContract = await getContract(contractAddress, preferredNetworkId);
+
       if (!userDbContract) {
           let role: 'creator' | 'depositor' | null = null;
           if (user?.address) {
-              role = await verifyUserRole(contractAddress, user.address);
+              role = await verifyUserRole(contractAddress, user.address, blockchainContract.networkId);
           }
 
           userDbContract = {

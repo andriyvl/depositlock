@@ -37,7 +37,6 @@ import {
   Loader2
 } from "lucide-react";
 import { ViewOnExplorer } from "@/lib/features/shared";
-import { polygonAmoy } from '@reown/appkit/networks';
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -56,9 +55,9 @@ export function CreatorForm() {
     title: "",
     description: "",
     amount: "",
-    currency: getDefaultCurrency(SupportedNetworkIds.polygonAmoy),
+    currency: getDefaultCurrency(SupportedNetworkIds.polygon),
     deadline: "",
-    networkId: SupportedNetworkIds.polygonAmoy
+    networkId: SupportedNetworkIds.polygon
   });
   const [isDeploying, setIsDeploying] = useState(false);
   const [contractAddress, setContractAddress] = useState<string>("");
@@ -125,15 +124,22 @@ export function CreatorForm() {
   const handleDeploy = async () => {
     setIsDeploying(true);
     try {
-      const onAmoy = await wallet.ensureAmoyNetwork?.();
-      if (onAmoy === false) {
-        throw new Error('Please switch to Polygon Amoy network');
+      const onPolygon = await wallet.ensurePolygonNetwork?.();
+      if (onPolygon === false) {
+        throw new Error('Please switch to Polygon network');
       }
       const deadlineDate = new Date(formData.deadline);
       const deadlineTimestamp = Math.floor(deadlineDate.getTime() / 1000);
 
       // Deploy real contract - using ZeroAddress for open access
-      const deployedAddress = await createContract(formData.amount, deadlineTimestamp, formData.title, formData.description, formData.networkId);
+      const deployedAddress = await createContract(
+        formData.amount,
+        deadlineTimestamp,
+        formData.title,
+        formData.description,
+        formData.networkId,
+        formData.currency
+      );
       if (!deployedAddress) {
         throw new Error('Failed to get deployed contract address');
       }
@@ -338,14 +344,20 @@ export function CreatorForm() {
                   </div>
                   <div>
                     <Label htmlFor="currency">Currency</Label>
-                    <Input
+                    <select
                       id="currency"
-                      value={`${formData.currency} - ${getNetworkDisplayName(formData.networkId as SupportedNetworkIds)}`}
-                      disabled
-                      className="mt-1 w-full"
-                    />
+                      value={formData.currency}
+                      onChange={(e) => handleInputChange('currency', e.target.value)}
+                      className="mt-1 w-full px-3 py-2 bg-background border border-input rounded-md text-sm"
+                    >
+                      {getSupportedCurrencies(formData.networkId).map((token) => (
+                        <option key={token.symbol} value={token.symbol}>
+                          {token.symbol} - {token.name}
+                        </option>
+                      ))}
+                    </select>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Native currency for {getNetworkDisplayName(formData.networkId as SupportedNetworkIds)}
+                      Stablecoin on {getNetworkDisplayName(formData.networkId)}
                     </p>
                   </div>
                 </div>

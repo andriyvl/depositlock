@@ -29,7 +29,7 @@ export function useAgreements({user}: {user: User | null}) {
 
       const agreementPromises = dbContracts.map(async (dbContract) => {
         try {
-          const blockchainContract = await getContract(dbContract.contractAddress);
+          const blockchainContract = await getContract(dbContract.contractAddress, dbContract.networkId);
           return mapToAgreement(dbContract, blockchainContract, user.address);
         } catch (e) {
           console.error(`Failed to fetch blockchain data for ${dbContract.contractAddress}`, e);

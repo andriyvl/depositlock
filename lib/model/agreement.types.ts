@@ -40,6 +40,9 @@ export interface BlockchainContract {
   depositor: string;
   amount: string;
   currency: string;
+  tokenAddress: string;
+  tokenSymbol: string;
+  tokenDecimals: number;
   deadline: string;
   status: AgreementStatus;
   title: string;
@@ -77,4 +80,3 @@ export type Agreement = BlockchainContract & {
   releaseDescription: string | null;
   cancelReason: string | null;
 };
-

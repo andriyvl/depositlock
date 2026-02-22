@@ -1,10 +1,20 @@
 "use client";
 
-import { ethers } from 'ethers'
+import { ethers } from 'ethers';
+import { SupportedNetworkIds } from '@/lib/model/network.config';
 
-export const AMOY_RPC_URL = process.env.NEXT_PUBLIC_RPC_AMOY || 'https://rpc-amoy.polygon.technology/'
+const RPC_BY_NETWORK: Record<SupportedNetworkIds, string> = {
+  [SupportedNetworkIds.polygon]: process.env.NEXT_PUBLIC_RPC_POLYGON || 'https://polygon-rpc.com',
+  [SupportedNetworkIds.polygonAmoy]: process.env.NEXT_PUBLIC_RPC_AMOY || 'https://rpc-amoy.polygon.technology/',
+  [SupportedNetworkIds.ethereum]: process.env.NEXT_PUBLIC_RPC_ETHEREUM || 'https://eth.llamarpc.com',
+  [SupportedNetworkIds.arbitrum]: process.env.NEXT_PUBLIC_RPC_ARBITRUM || 'https://arb1.arbitrum.io/rpc',
+};
+
+export function getReadonlyRpcUrl(networkId: SupportedNetworkIds = SupportedNetworkIds.polygon): string {
+  return RPC_BY_NETWORK[networkId] || RPC_BY_NETWORK[SupportedNetworkIds.polygon];
+}
 
 // Read-only provider fallback (no wallet connected)
-export function getReadonlyProvider(): ethers.JsonRpcProvider {
-  return new ethers.JsonRpcProvider(AMOY_RPC_URL)
+export function getReadonlyProvider(networkId: SupportedNetworkIds = SupportedNetworkIds.polygon): ethers.JsonRpcProvider {
+  return new ethers.JsonRpcProvider(getReadonlyRpcUrl(networkId));
 }

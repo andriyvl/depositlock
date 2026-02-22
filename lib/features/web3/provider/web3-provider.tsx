@@ -1,9 +1,9 @@
 "use client";
 
 import React from 'react';
-import { createAppKit, AppKitProvider } from '@reown/appkit/react';
+import { createAppKit } from '@reown/appkit/react';
 import { EthersAdapter } from '@reown/appkit-adapter-ethers';
-import { polygonAmoy } from '@reown/appkit/networks';
+import { polygon } from '@reown/appkit/networks';
 
 const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID as string;
 if (!projectId) {
@@ -27,7 +27,7 @@ createAppKit({
   adapters: [new EthersAdapter()],
   metadata,
   projectId,
-  networks: [polygonAmoy],
+  networks: [polygon],
   themeVariables: {
     '--w3m-z-index': 51,
   }

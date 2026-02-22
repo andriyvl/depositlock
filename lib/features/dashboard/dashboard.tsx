@@ -15,8 +15,8 @@ import { Lock, Plus, Eye, Clock, Shield, TrendingUp, Calendar, DollarSign, Users
 import { formatDateShort, getDaysUntilDeadline } from "@/lib/helpers/date.helpers";
 
 import { verifyUserRole, copyContractAddress } from "@/lib/helpers/contract.helpers";
-import { getNetworkIdFromProvider } from "@/lib/helpers/network.helpers";
 import { AgreementStatus, AgreementStatusName } from "@/lib/model/agreement.types";
+import { SupportedNetworkIds } from "@/lib/model/network.config";
 import { StatusWidgets } from "./components/status-widgets";
 
 
@@ -60,11 +60,10 @@ export function Dashboard() {
     setValidationMessage("🔍 Verifying contract...");
     
     try {
-      const role = await verifyUserRole(contractAddress.trim(), user.address);
+      const networkId = user.networkId || SupportedNetworkIds.polygon;
+      const role = await verifyUserRole(contractAddress.trim(), user.address, networkId);
 
       if (role) {
-        const networkId = await getNetworkIdFromProvider();
-
         await addContractAction(user.address, {
           contractAddress: contractAddress.trim().toLowerCase(),
           role,

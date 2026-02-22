@@ -19,7 +19,8 @@ export interface AppNetworkConfig extends Assign<Chain<undefined>, Chain> {
   supportedTokens: Array<{
     symbol: string;
     name: string;
-    address?: string;
+    address: string;
+    decimals: number;
   }>;
 }
 
@@ -36,42 +37,33 @@ const APP_NETWORK_CONFIG: Record<SupportedNetworkIds, Partial<AppNetworkConfig>>
     displayName: 'Polygon Amoy Testnet',
     supportedTokens: [
       {
-        symbol: 'POL',
-        name: 'Polygon',
-      },
-      {
         symbol: 'USDC',
         name: 'USD Coin',
         address: '0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582',
+        decimals: 6,
       },
       {
         symbol: 'USDT',
         name: 'Tether USD',
         address: '0xA02f6adc7926efeBBd59Fd43A84f4E0c0c91e832',
+        decimals: 6,
       },
     ],
   },
   [SupportedNetworkIds.polygon]: {
-    displayName: 'Polygon (Recommended - Low Fees)',
+    displayName: 'Polygon Mainnet (Production)',
     supportedTokens: [
-      {
-        symbol: 'MATIC',
-        name: 'Polygon',
-      },
       {
         symbol: 'USDC',
         name: 'USD Coin',
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+        address: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
+        decimals: 6,
       },
       {
         symbol: 'USDT',
         name: 'Tether USD',
         address: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
-      },
-      {
-        symbol: 'DAI',
-        name: 'Dai Stablecoin',
-        address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+        decimals: 6,
       },
     ],
   },
@@ -79,23 +71,22 @@ const APP_NETWORK_CONFIG: Record<SupportedNetworkIds, Partial<AppNetworkConfig>>
     displayName: 'Ethereum (Higher Fees)',
     supportedTokens: [
       {
-        symbol: 'ETH',
-        name: 'Ether',
-      },
-      {
         symbol: 'USDC',
         name: 'USD Coin',
-        address: '0xa0b86a33e6d3d0b79c6930b5a95f6c21a4d4e5e3',
+        address: '0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        decimals: 6,
       },
       {
         symbol: 'USDT',
         name: 'Tether USD',
         address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+        decimals: 6,
       },
       {
         symbol: 'DAI',
         name: 'Dai Stablecoin',
         address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+        decimals: 18,
       },
     ],
   },
@@ -103,23 +94,22 @@ const APP_NETWORK_CONFIG: Record<SupportedNetworkIds, Partial<AppNetworkConfig>>
     displayName: 'Arbitrum (Low Fees)',
     supportedTokens: [
       {
-        symbol: 'ETH',
-        name: 'Ether',
-      },
-      {
         symbol: 'USDC',
         name: 'USD Coin',
-        address: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8',
+        address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+        decimals: 6,
       },
       {
         symbol: 'USDT',
         name: 'Tether USD',
         address: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
+        decimals: 6,
       },
       {
         symbol: 'DAI',
         name: 'Dai Stablecoin',
         address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
+        decimals: 18,
       },
     ],
   },
@@ -155,7 +145,17 @@ export function getNetworkConfig(networkId: SupportedNetworkIds): AppNetworkConf
 
 export function getSupportedCurrencies(networkId: SupportedNetworkIds): Array<{ symbol: string; name: string }> {
   const config = getNetworkConfig(networkId);
-  return config?.supportedTokens || [];
+  return (config?.supportedTokens || []).map(({ symbol, name }) => ({ symbol, name }));
+}
+
+export function getTokenConfig(
+  networkId: SupportedNetworkIds,
+  symbol: string
+): { symbol: string; name: string; address: string; decimals: number } | undefined {
+  const config = getNetworkConfig(networkId);
+  if (!config) return undefined;
+
+  return config.supportedTokens.find((token) => token.symbol === symbol);
 }
 
 export function getNetworkDisplayName(networkId: SupportedNetworkIds): string {
@@ -166,17 +166,11 @@ export function getNetworkDisplayName(networkId: SupportedNetworkIds): string {
 export function getDefaultCurrency(networkId: SupportedNetworkIds): string {
   const config = getNetworkConfig(networkId);
   if (!config) return 'USDC';
-  
-  // For testnets, prefer native currency
-  if (config.testnet) {
-    return config.nativeCurrency.symbol;
-  }
-  
-  // For mainnet, prefer stablecoins
+
   const stablecoins = ['USDC', 'USDT', 'DAI'];
-  const availableStablecoin = config.supportedTokens.find(token => 
+  const availableStablecoin = config.supportedTokens.find((token) =>
     stablecoins.includes(token.symbol)
   );
-  
-  return availableStablecoin?.symbol || config.nativeCurrency.symbol;
+
+  return availableStablecoin?.symbol || config.supportedTokens[0]?.symbol || 'USDC';
 }

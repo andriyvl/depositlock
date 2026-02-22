@@ -14,7 +14,7 @@ interface ViewOnExplorerProps {
 
 export function ViewOnExplorer({ 
   contractAddress, 
-  networkId = SupportedNetworkIds.polygonAmoy,
+  networkId = SupportedNetworkIds.polygon,
   variant = "outline",
   className = "w-full justify-start",
   children 

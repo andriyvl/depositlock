@@ -44,10 +44,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setError(null);
 
         // Ensure correct network after authentication
-        wallet.ensureAmoyNetwork?.().then((onAmoy) => {
-          if (onAmoy === false) {
-            setError('Please switch to Polygon Amoy network');
-            toast.error('Please switch to Polygon Amoy network');
+        wallet.ensurePolygonNetwork?.().then((onPolygon) => {
+          if (onPolygon === false) {
+            setError('Please switch to Polygon network');
+            toast.error('Please switch to Polygon network');
           }
         }).catch(console.warn);
       }

@@ -3,7 +3,7 @@ import { useAppKit, useAppKitAccount, useAppKitProvider, useAppKitState, useDisc
 import { ethers } from 'ethers';
 import { getReadonlyProvider } from '../provider/appkit.client';
 import { useState, useEffect, useCallback } from 'react';
-import { polygonAmoy } from '@reown/appkit/networks'
+import { polygon } from '@reown/appkit/networks';
 import { SupportedNetworkIds } from '@/lib/model/network.config';
 
 
@@ -40,14 +40,14 @@ export function useWallet() {
     }
   }, [signer]);
 
-  const ensureAmoyNetwork = useCallback(async (): Promise<boolean> => {
+  const ensurePolygonNetwork = useCallback(async (): Promise<boolean> => {
     try {
       if (!walletProvider) return true; // read-only
-      if (selectedNetworkId === SupportedNetworkIds.polygonAmoy) return true;
+      if (selectedNetworkId === SupportedNetworkIds.polygon) return true;
       
       await (walletProvider as any).request?.({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: `0x${polygonAmoy.id.toString(16)}` }]
+        params: [{ chainId: `0x${polygon.id.toString(16)}` }]
       });
       return true;
     } catch (switchError: any) {
@@ -55,12 +55,12 @@ export function useWallet() {
       try {
         await (walletProvider as any).request?.({
           method: 'wallet_addEthereumChain',
-          params: [polygonAmoy]
+          params: [polygon]
         });
         return true;
       } catch (addError) {
         // eslint-disable-next-line no-console
-        console.error('Failed to add/switch to Amoy network', addError);
+        console.error('Failed to add/switch to Polygon network', addError);
         return false;
       }
     }
@@ -81,6 +81,6 @@ export function useWallet() {
     getSigner: () => signer,
     getAddress,
     selectedNetworkId,
-    ensureAmoyNetwork
+    ensurePolygonNetwork
   };
 }
