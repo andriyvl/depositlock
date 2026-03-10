@@ -19,7 +19,7 @@ export default function ContactPage() {
       <div className="grid gap-4 md:grid-cols-2">
         <article className="rounded-xl border border-border bg-background/80 p-5 space-y-2">
           <h2 className="text-lg font-medium">General support</h2>
-          <p className="text-muted-foreground">Email: support@depositlock.app</p>
+          <p className="text-muted-foreground">Email: support@depositlock.devviy.com</p>
           <p className="text-muted-foreground">Response time: usually within 24 hours.</p>
         </article>
 

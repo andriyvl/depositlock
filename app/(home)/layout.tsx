@@ -45,7 +45,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
                         </div>
                     </div>
                     <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-                        © 2024 DepositLock. Securing deposits with blockchain technology.
+                        © 2026 DepositLock. Securing deposits with blockchain technology.
                     </div>
                 </div>
             </footer>

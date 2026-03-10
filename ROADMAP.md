@@ -1,14 +1,16 @@
 - [ ] Cleanup the codebase
 - [ ] Improve performance (site is hanging at random times)
 - [ ] Create a Privacy page
-- [ ] Create a Terms page
-- [ ] Create a FAQ page
-  - [ ] Add information of what networks are supported
-  - [ ] Add information of what currencies are supported
-  - [ ] Add information of what are the platform fees (0 fees)
-  - [ ] Add information of how the contract works
-  - [ ] Add information of how to create a contract
-  - [ ] Add information of how to withdraw funds
-  - [ ] Add information of how to cancel a contract
-  - [ ] Add information of how to dispute a contract
-- [ ] Create a Contact page
+- [x] Create a Terms page
+- [x] Create a FAQ page
+  - [x] Add information of what networks are supported
+  - [x] Add information of what currencies are supported
+  - [x] Add information of what are the platform fees (0 fees)
+  - [x] Add information of how the contract works
+  - [x] Add information of how to create a contract
+  - [x] Add information of how to withdraw funds
+  - [x] Add information of how to cancel a contract
+  - [x] Add information of how to dispute a contract
+- [x] Create a Contact page
+
+- [ ] Redesign the website. Use best design practices. Make the website more appealing
