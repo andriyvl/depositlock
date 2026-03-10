@@ -23,12 +23,13 @@ export default function ContractDetailPage() {
   const contractId = params?.contractId as string | undefined;
   const { user } = useAuth();
 
-  const { fetchAgreement } = useAgreement(contractId!, user!);
-  const { currentAgreement, currentAgreementLoading, setCurrentAgreement, setCurrentAgreementLoading } = useAppStore();
+  const { fetchAgreement } = useAgreement(contractId || "", user || null);
+  const { currentAgreement, currentAgreementLoading } = useAppStore();
 
   useEffect(() => {
+    if (!contractId) return;
     fetchAgreement();
-  }, [contractId, user?.address, setCurrentAgreement, setCurrentAgreementLoading]);
+  }, [contractId, user?.address, fetchAgreement]);
 
   if (currentAgreementLoading) {
     return (

@@ -18,7 +18,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
                     <nav className="hidden md:flex items-center space-x-6 text-sm text-muted-foreground">
                         <Link className="hover:text-foreground transition-colors" href="#features">Features</Link>
                         <Link className="hover:text-foreground transition-colors" href="#how-it-works">How it Works</Link>
-                        <Link className="hover:text-foreground transition-colors" href="#pricing">Pricing</Link>
+                        <Link className="hover:text-foreground transition-colors" href="/faq">FAQ</Link>
                     </nav>
                     <div className="flex items-center space-x-3">
                         <Link href="/signin" className="text-sm text-muted-foreground hover:text-foreground">Sign In</Link>
@@ -41,7 +41,8 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
                         <div className="flex items-center space-x-6 text-sm text-muted-foreground">
                             <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
                             <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
-                            <Link href="/support" className="hover:text-foreground transition-colors">Support</Link>
+                            <Link href="/faq" className="hover:text-foreground transition-colors">FAQ</Link>
+                            <Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link>
                         </div>
                     </div>
                     <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">

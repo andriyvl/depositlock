@@ -11,6 +11,15 @@ import { getCurrencyFromNetworkId } from '../../helpers/contract.helpers';
 export function useContract() {
   const wallet = useWallet();
 
+  const withTimeout = async <T,>(promise: Promise<T>, ms = 12000): Promise<T> => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+    const timeout = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(() => reject(new Error('Contract read timed out')), ms);
+    });
+
+    return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutId));
+  };
+
   const createContract = async (amount: string, deadline: number, title: string, description: string, networkId: string) => {
     const signer = await wallet.getSigner();
     if (!signer) {
@@ -96,6 +105,8 @@ export function useContract() {
   const getContract = async (contractAddress: string): Promise<BlockchainContract> => {
     const provider = getReadonlyProvider();
     const contract = new ethers.Contract(contractAddress, escrowABI, provider);
+
+    const read = <T,>(functionName: string) => withTimeout<T>(contract.getFunction(functionName)());
   
     const [
       creator,
@@ -117,24 +128,24 @@ export function useContract() {
       cancelReason,
       networkId,
     ] = await Promise.all([
-      contract.getFunction('creator')(),
-      contract.getFunction('depositor')(),
-      contract.getFunction('amount')(),
-      contract.getFunction('deadline')(),
-      contract.getFunction('status')(),
-      contract.getFunction('title')(),
-      contract.getFunction('description')(),
-      contract.getFunction('createdAt')(),
-      contract.getFunction('filledAt')(),
-      contract.getFunction('releasedAt')(),
-      contract.getFunction('canceledAt')(),
-      contract.getFunction('disputedAt')(),
-      contract.getFunction('releasedAmount')(),
-      contract.getFunction('proposedAmount')(),
-      contract.getFunction('disputeReason')(),
-      contract.getFunction('releaseDescription')(),
-      contract.getFunction('cancelReason')(),
-      contract.getFunction('networkId')(),
+      read<string>('creator'),
+      read<string>('depositor'),
+      read<bigint>('amount'),
+      read<bigint>('deadline'),
+      read<bigint>('status'),
+      read<string>('title'),
+      read<string>('description'),
+      read<bigint>('createdAt'),
+      read<bigint>('filledAt'),
+      read<bigint>('releasedAt'),
+      read<bigint>('canceledAt'),
+      read<bigint>('disputedAt'),
+      read<bigint>('releasedAmount'),
+      read<bigint>('proposedAmount'),
+      read<string>('disputeReason'),
+      read<string>('releaseDescription'),
+      read<string>('cancelReason'),
+      read<string>('networkId'),
     ]);
   
   //   const networkId = await getNetworkIdFromProvider();
