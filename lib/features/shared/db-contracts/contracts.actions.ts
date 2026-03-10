@@ -1,6 +1,6 @@
 'use server'
 
-import { supabase } from '@/lib/supabase/server-client'
+import { getSupabaseAdminClient } from '@/lib/supabase/server-client'
 import { UserDatabaseContract } from '@/lib/model/agreement.types'
 import { revalidatePath } from 'next/cache'
 
@@ -8,6 +8,8 @@ export async function getContracts(userAddress: string): Promise<UserDatabaseCon
   if (!userAddress) {
     return []
   }
+
+  const supabase = getSupabaseAdminClient()
 
   const { data, error } = await supabase
     .from('user_contracts')
@@ -35,19 +37,44 @@ export async function addContract(
     throw new Error('User address is required')
   }
 
-  const { error } = await supabase
+  const supabase = getSupabaseAdminClient()
+
+  const normalizedUserAddress = userAddress.toLowerCase()
+  const normalizedContractAddress = contract.contractAddress.toLowerCase()
+
+  const { data: existingContracts, error: existingContractsError } = await supabase
     .from('user_contracts')
-    .upsert(
-      [
-        {
-          user_address: userAddress.toLowerCase(),
-          contract_address: contract.contractAddress.toLowerCase(),
+    .select('contract_address')
+    .eq('user_address', normalizedUserAddress)
+    .eq('contract_address', normalizedContractAddress)
+    .limit(1)
+
+  if (existingContractsError) {
+    console.error('Error checking existing contract:', existingContractsError)
+    throw new Error(`Failed to add contract: ${existingContractsError.message}`)
+  }
+
+  const operation = existingContracts.length > 0
+    ? supabase
+        .from('user_contracts')
+        .update({
           network_id: contract.networkId,
           role: contract.role,
-        },
-      ],
-      { onConflict: 'user_address,contract_address' }
-    )
+        })
+        .match({
+          user_address: normalizedUserAddress,
+          contract_address: normalizedContractAddress,
+        })
+    : supabase
+        .from('user_contracts')
+        .insert({
+          user_address: normalizedUserAddress,
+          contract_address: normalizedContractAddress,
+          network_id: contract.networkId,
+          role: contract.role,
+        })
+
+  const { error } = await operation
 
   if (error) {
     console.error('Error adding contract:', error)
@@ -64,6 +91,8 @@ export async function removeContract(
   if (!userAddress) {
     throw new Error('User address is required')
   }
+
+  const supabase = getSupabaseAdminClient()
 
   const { error } = await supabase
     .from('user_contracts')

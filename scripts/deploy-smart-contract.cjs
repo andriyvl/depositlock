@@ -69,6 +69,14 @@ async function main() {
       explorer: "https://basescan.org",
       networkId: "eip155:8453",
     },
+    5000: {
+      name: "Mantle Mainnet",
+      currency: "MNT",
+      defaultAmount: "100",
+      defaultDeadlineHours: 168,
+      explorer: "https://mantlescan.xyz",
+      networkId: "eip155:5000",
+    },
   };
 
   const tokenConfigs = {
@@ -94,7 +102,7 @@ async function main() {
     },
     1: {
       USDC: {
-        address: "0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
         decimals: 6,
       },
       USDT: {
@@ -129,6 +137,12 @@ async function main() {
       },
       USDT: {
         address: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+        decimals: 6,
+      },
+    },
+    5000: {
+      USDC: {
+        address: "0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9",
         decimals: 6,
       },
     },

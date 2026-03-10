@@ -10,6 +10,7 @@ import { DEPLOYMENT_NETWORKS, getNetworkConfig, getTokenConfig, SupportedNetwork
 
 const erc20Abi = [
   'function allowance(address owner, address spender) view returns (uint256)',
+  'function balanceOf(address owner) view returns (uint256)',
   'function approve(address spender, uint256 amount) returns (bool)',
 ];
 
@@ -25,6 +26,16 @@ type DeploymentCostEstimate = {
   l1DataFeeNative: string;
   totalFeeNative: string;
   nativeSymbol: string;
+};
+
+type DepositApprovalState = {
+  allowance: bigint;
+  balance: bigint;
+  requiredAmount: bigint;
+  tokenAddress: string;
+  tokenSymbol: string;
+  hasEnoughBalance: boolean;
+  isApproved: boolean;
 };
 
 export function useContract() {
@@ -359,26 +370,70 @@ export function useContract() {
     return tx;
   };
 
-  const fillContract = async (contractAddress: string, _amount?: string) => {
+  const getDepositApprovalState = async (contractAddress: string): Promise<DepositApprovalState> => {
     const signer = await wallet.getSigner();
     if (!signer) {
       throw new Error('No signer available');
     }
 
     const escrowContract = new ethers.Contract(contractAddress, escrowABI, signer);
-    const [requiredAmount, tokenAddress, depositorAddress] = await Promise.all([
+    const [requiredAmount, tokenAddress, tokenSymbol, depositorAddress] = await Promise.all([
       escrowContract.getFunction('amount')(),
       escrowContract.getFunction('tokenAddress')(),
+      escrowContract.getFunction('tokenSymbol')(),
       signer.getAddress(),
     ]);
 
     const tokenContract = new ethers.Contract(tokenAddress, erc20Abi, signer);
-    const allowance = await tokenContract.getFunction('allowance')(depositorAddress, contractAddress);
+    const [allowance, balance] = await Promise.all([
+      tokenContract.getFunction('allowance')(depositorAddress, contractAddress),
+      tokenContract.getFunction('balanceOf')(depositorAddress),
+    ]);
 
-    if (allowance < requiredAmount) {
-      const approveTx = await tokenContract.getFunction('approve')(contractAddress, requiredAmount);
-      await approveTx.wait();
+    return {
+      allowance,
+      balance,
+      requiredAmount,
+      tokenAddress,
+      tokenSymbol,
+      hasEnoughBalance: balance >= requiredAmount,
+      isApproved: allowance >= requiredAmount,
+    };
+  };
+
+  const approveDeposit = async (contractAddress: string) => {
+    const signer = await wallet.getSigner();
+    if (!signer) {
+      throw new Error('No signer available');
     }
+
+    const approvalState = await getDepositApprovalState(contractAddress);
+    if (approvalState.isApproved) {
+      return null;
+    }
+
+    const tokenContract = new ethers.Contract(approvalState.tokenAddress, erc20Abi, signer);
+    const approveTx = await tokenContract.getFunction('approve')(contractAddress, approvalState.requiredAmount);
+    await approveTx.wait();
+
+    return approveTx;
+  };
+
+  const fillContract = async (contractAddress: string) => {
+    const signer = await wallet.getSigner();
+    if (!signer) {
+      throw new Error('No signer available');
+    }
+
+    const approvalState = await getDepositApprovalState(contractAddress);
+    if (!approvalState.isApproved) {
+      throw new Error(`Approve ${approvalState.tokenSymbol} before depositing.`);
+    }
+    if (!approvalState.hasEnoughBalance) {
+      throw new Error(`Insufficient ${approvalState.tokenSymbol} balance to deposit.`);
+    }
+
+    const escrowContract = new ethers.Contract(contractAddress, escrowABI, signer);
 
     const tx = await escrowContract.getFunction('deposit')();
     await tx.wait();
@@ -448,6 +503,8 @@ export function useContract() {
     createContract,
     estimateDeploymentCost,
     getContract,
+    getDepositApprovalState,
+    approveDeposit,
     cancelContract,
     fillContract,
     openDispute,

@@ -10,6 +10,7 @@ const RPC_BY_NETWORK: Record<SupportedNetworkIds, string> = {
   [SupportedNetworkIds.arbitrum]: process.env.NEXT_PUBLIC_RPC_ARBITRUM || 'https://arbitrum-one-rpc.publicnode.com',
   [SupportedNetworkIds.optimism]: process.env.NEXT_PUBLIC_RPC_OPTIMISM || 'https://optimism-rpc.publicnode.com',
   [SupportedNetworkIds.base]: process.env.NEXT_PUBLIC_RPC_BASE || 'https://base-rpc.publicnode.com',
+  [SupportedNetworkIds.mantle]: process.env.NEXT_PUBLIC_RPC_MANTLE || 'https://rpc.mantle.xyz',
 };
 
 export function getReadonlyRpcUrl(networkId: SupportedNetworkIds = SupportedNetworkIds.polygon): string {

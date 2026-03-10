@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,6 +20,7 @@ import {
   getDefaultCurrency,
   SupportedNetworkIds,
 } from "@/lib/model/network.config";
+import { showToast } from "@/lib/features/shared/components/show-toast";
 import { useContracts } from "../shared/db-contracts/contracts.hook";
 import {
   Lock,
@@ -57,6 +58,38 @@ interface DeploymentEstimate {
   nativeSymbol: string;
 }
 
+interface NativeUsdPriceSnapshot {
+  usd: number;
+  fetchedAt: number;
+}
+
+const COINGECKO_NATIVE_PRICE_IDS: Partial<Record<SupportedNetworkIds, string[]>> = {
+  [SupportedNetworkIds.polygon]: ["polygon-ecosystem-token"],
+  [SupportedNetworkIds.polygonAmoy]: ["polygon-ecosystem-token"],
+  [SupportedNetworkIds.arbitrum]: ["ethereum"],
+  [SupportedNetworkIds.optimism]: ["ethereum"],
+  [SupportedNetworkIds.base]: ["ethereum"],
+  [SupportedNetworkIds.mantle]: ["mantle"],
+  [SupportedNetworkIds.ethereum]: ["ethereum"],
+};
+
+const NATIVE_USD_PRICE_REFRESH_MS = 5 * 60 * 1000;
+
+function formatStablecoinEquivalent(amount: number): string {
+  if (amount >= 1) return amount.toFixed(2);
+  if (amount >= 0.1) return amount.toFixed(3);
+  if (amount >= 0.01) return amount.toFixed(4);
+  return amount.toFixed(6);
+}
+
+function getPreferredCurrency(networkId: SupportedNetworkIds, currentCurrency: string): string {
+  const supportsCurrentCurrency = getSupportedCurrencies(networkId).some(
+    (token) => token.symbol === currentCurrency
+  );
+
+  return supportsCurrentCurrency ? currentCurrency : getDefaultCurrency(networkId);
+}
+
 export function CreatorForm() {
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [formData, setFormData] = useState<FormData>({
@@ -71,6 +104,10 @@ export function CreatorForm() {
   const [contractAddress, setContractAddress] = useState<string>("");
   const [deploymentEstimate, setDeploymentEstimate] = useState<DeploymentEstimate | null>(null);
   const [isEstimatingCost, setIsEstimatingCost] = useState(false);
+  const [nativeUsdPriceByNetwork, setNativeUsdPriceByNetwork] = useState<
+    Partial<Record<SupportedNetworkIds, NativeUsdPriceSnapshot>>
+  >({});
+  const [isLoadingNativeUsdPrice, setIsLoadingNativeUsdPrice] = useState(false);
   const [estimateError, setEstimateError] = useState<string | null>(null);
   const [deployError, setDeployError] = useState<string | null>(null);
   const auth = useAuth();
@@ -84,6 +121,32 @@ export function CreatorForm() {
   }, [estimateDeploymentCost]);
 
   const progress = (currentStep / 4) * 100;
+
+  useEffect(() => {
+    const walletNetworkId = wallet.selectedNetworkId;
+
+    if (!wallet.isConnected || !walletNetworkId) {
+      return;
+    }
+
+    if (!DEPLOYMENT_NETWORKS.includes(walletNetworkId)) {
+      return;
+    }
+
+    setFormData((prev) => {
+      const nextCurrency = getPreferredCurrency(walletNetworkId, prev.currency);
+
+      if (prev.networkId === walletNetworkId && prev.currency === nextCurrency) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        networkId: walletNetworkId,
+        currency: nextCurrency,
+      };
+    });
+  }, [wallet.isConnected, wallet.selectedNetworkId]);
 
   const isStepValid = (step: Step): boolean => {
     switch (step) {
@@ -117,14 +180,26 @@ export function CreatorForm() {
     }
   };
 
-  const handleInputChange = (field: keyof FormData, value: string) => {
-    if (field === 'networkId') {
-      // When network changes, update currency to default for that network
-      const defaultCurrency = getDefaultCurrency(value as SupportedNetworkIds);
-      setFormData(prev => ({ ...prev, [field]: value as SupportedNetworkIds, currency: defaultCurrency }));
-    } else {
-      setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: Exclude<keyof FormData, 'networkId'>, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleNetworkChange = async (networkId: SupportedNetworkIds) => {
+    if (networkId === formData.networkId) {
+      return;
     }
+
+    const switchedNetwork = await wallet.ensureNetwork?.(networkId);
+    if (switchedNetwork === false) {
+      showToast(`Please switch your wallet to ${getNetworkDisplayName(networkId)}.`, 'error');
+      return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      networkId,
+      currency: getPreferredCurrency(networkId, prev.currency),
+    }));
   };
 
   const handleAuthentication = async () => {
@@ -262,6 +337,86 @@ export function CreatorForm() {
     formData.networkId,
     formData.currency,
   ]);
+
+  useEffect(() => {
+    const coingeckoIds = COINGECKO_NATIVE_PRICE_IDS[formData.networkId];
+    if (!coingeckoIds?.length) {
+      setIsLoadingNativeUsdPrice(false);
+      return;
+    }
+
+    let isCancelled = false;
+    const cachedPrice = nativeUsdPriceByNetwork[formData.networkId];
+    const hasFreshCachedPrice =
+      cachedPrice !== undefined &&
+      Date.now() - cachedPrice.fetchedAt < NATIVE_USD_PRICE_REFRESH_MS;
+
+    const fetchNativeUsdPrice = async (isInitial: boolean) => {
+      if (isInitial && !cachedPrice) {
+        setIsLoadingNativeUsdPrice(true);
+      }
+
+      try {
+        const response = await fetch(
+          `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(coingeckoIds.join(','))}&vs_currencies=usd`,
+          { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+          throw new Error("Unable to fetch native token price.");
+        }
+
+        const data = await response.json() as Record<string, { usd?: number }>;
+        const price = coingeckoIds
+          .map((coingeckoId) => Number(data?.[coingeckoId]?.usd))
+          .find((value) => Number.isFinite(value) && value > 0);
+
+        if (price === undefined || !Number.isFinite(price) || price <= 0) {
+          throw new Error("Invalid native token price.");
+        }
+
+        if (!isCancelled) {
+          setNativeUsdPriceByNetwork((prev) => ({
+            ...prev,
+            [formData.networkId]: {
+              usd: price,
+              fetchedAt: Date.now(),
+            },
+          }));
+        }
+      } catch {
+        return;
+      } finally {
+        if (!isCancelled && isInitial) {
+          setIsLoadingNativeUsdPrice(false);
+        }
+      }
+    };
+
+    if (hasFreshCachedPrice) {
+      setIsLoadingNativeUsdPrice(false);
+    } else {
+      void fetchNativeUsdPrice(true);
+    }
+
+    const intervalId = window.setInterval(() => {
+      void fetchNativeUsdPrice(false);
+    }, NATIVE_USD_PRICE_REFRESH_MS);
+
+    return () => {
+      isCancelled = true;
+      window.clearInterval(intervalId);
+    };
+  }, [formData.networkId]);
+
+  const nativeUsdPrice = nativeUsdPriceByNetwork[formData.networkId]?.usd ?? null;
+
+  const stablecoinFeeEquivalent = useMemo(() => {
+    if (!deploymentEstimate || nativeUsdPrice === null) return null;
+    const nativeFee = Number(deploymentEstimate.totalFeeNative);
+    if (!Number.isFinite(nativeFee) || nativeFee <= 0) return null;
+    return nativeFee * nativeUsdPrice;
+  }, [deploymentEstimate, nativeUsdPrice]);
 
   return (
     <div className="min-h-screen">
@@ -485,7 +640,7 @@ export function CreatorForm() {
                   <select
                     id="network"
                     value={formData.networkId}
-                    onChange={(e) => handleInputChange('networkId', e.target.value)}
+                    onChange={(e) => void handleNetworkChange(e.target.value as SupportedNetworkIds)}
                     className="mt-1 w-full px-3 py-2 bg-background border border-input rounded-md text-sm"
                   >
                     {DEPLOYMENT_NETWORKS.map((networkId) => (
@@ -508,6 +663,13 @@ export function CreatorForm() {
                   ) : deploymentEstimate ? (
                     <div className="space-y-1 text-sm text-muted-foreground">
                       <p className="text-foreground font-medium">
+                        {stablecoinFeeEquivalent !== null
+                          ? `~${formatStablecoinEquivalent(stablecoinFeeEquivalent)} ${formData.currency}`
+                          : isLoadingNativeUsdPrice
+                            ? `Calculating ${formData.currency} equivalent...`
+                            : `~-- ${formData.currency}`}
+                      </p>
+                      <p>
                         ~{deploymentEstimate.totalFeeNative} {deploymentEstimate.nativeSymbol}
                       </p>
                       <p>Gas limit: {deploymentEstimate.gasLimit}</p>
@@ -552,7 +714,14 @@ export function CreatorForm() {
                     <h4 className="font-medium text-secondary-800 mb-2">Network & Creator</h4>
                     <div className="space-y-1 text-sm text-secondary-700">
                       <div><span className="text-muted-foreground">Network:</span> {getNetworkDisplayName(formData.networkId)}</div>
-                      <div><span className="text-muted-foreground">Estimated deploy cost:</span> {deploymentEstimate ? `~${deploymentEstimate.totalFeeNative} ${deploymentEstimate.nativeSymbol}` : 'Estimating...'}</div>
+                      <div>
+                        <span className="text-muted-foreground">Estimated deploy cost:</span>{" "}
+                        {deploymentEstimate
+                          ? stablecoinFeeEquivalent !== null
+                            ? `~${formatStablecoinEquivalent(stablecoinFeeEquivalent)} ${formData.currency} (~${deploymentEstimate.totalFeeNative} ${deploymentEstimate.nativeSymbol})`
+                            : `~${deploymentEstimate.totalFeeNative} ${deploymentEstimate.nativeSymbol}`
+                          : 'Estimating...'}
+                      </div>
                       <div><span className="text-muted-foreground">Creator:</span> <span className="font-mono">{auth.user?.address.slice(0, 6)}...{auth.user?.address.slice(-4)}</span></div>
                       <div><span className="text-muted-foreground">Access:</span> Open to any wallet</div>
                     </div>

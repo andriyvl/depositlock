@@ -3,7 +3,7 @@ import { Agreement, AgreementStatus, UserDatabaseContract } from "@/lib/model/ag
 
 interface AppState {
   currentAgreementStatusEvent?: AgreementStatus;
-  setCurrentAgreementStatusEvent: (status: AgreementStatus) => void;
+  setCurrentAgreementStatusEvent: (status?: AgreementStatus) => void;
 
   isAuthLoading: boolean;
   setIsAuthLoading: (loading: boolean) => void;
@@ -25,7 +25,7 @@ interface AppState {
 
 export const useAppStore = create<AppState>((set) => ({
   currentAgreementStatusEvent: undefined,
-  setCurrentAgreementStatusEvent: (status: AgreementStatus) => set({ currentAgreementStatusEvent: status }),
+  setCurrentAgreementStatusEvent: (status?: AgreementStatus) => set({ currentAgreementStatusEvent: status }),
 
   agreements: [],
   setAgreements: (agreements: Agreement[]) => set({ agreements }),
@@ -45,4 +45,3 @@ export const useAppStore = create<AppState>((set) => ({
   currentAgreementError: null,
   setCurrentAgreementError: (error: string | null) => set({ currentAgreementError: error }),
 }));
-

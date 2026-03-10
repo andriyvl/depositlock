@@ -1,4 +1,4 @@
-import { polygonAmoy, polygon, mainnet, arbitrum, optimism, base, Assign, Chain } from '@reown/appkit/networks';
+import { polygonAmoy, polygon, mainnet, arbitrum, optimism, base, mantle, Assign, Chain } from '@reown/appkit/networks';
 
 export enum ChainNamespace {
   EVM = 'eip155',
@@ -12,6 +12,7 @@ export enum EthereumChainId {
   polygon = 137,
   optimism = 10,
   base = 8453,
+  mantle = 5000,
   ethereum = 1,
   arbitrum = 42161,
 }
@@ -32,6 +33,7 @@ export enum SupportedNetworkIds {
   polygon = `${ChainNamespace.EVM}:${EthereumChainId.polygon}`,
   optimism = `${ChainNamespace.EVM}:${EthereumChainId.optimism}`,
   base = `${ChainNamespace.EVM}:${EthereumChainId.base}`,
+  mantle = `${ChainNamespace.EVM}:${EthereumChainId.mantle}`,
   ethereum = `${ChainNamespace.EVM}:${EthereumChainId.ethereum}`,
   arbitrum = `${ChainNamespace.EVM}:${EthereumChainId.arbitrum}`,
 }
@@ -122,13 +124,24 @@ const APP_NETWORK_CONFIG: Record<SupportedNetworkIds, Partial<AppNetworkConfig>>
       },
     ],
   },
+  [SupportedNetworkIds.mantle]: {
+    displayName: 'Mantle',
+    supportedTokens: [
+      {
+        symbol: 'USDC',
+        name: 'USD Coin',
+        address: '0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9',
+        decimals: 6,
+      },
+    ],
+  },
   [SupportedNetworkIds.ethereum]: {
     displayName: 'Ethereum (Higher Fees)',
     supportedTokens: [
       {
         symbol: 'USDC',
         name: 'USD Coin',
-        address: '0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
         decimals: 6,
       },
       {
@@ -148,6 +161,7 @@ const BASE_CONFIGS = {
   [SupportedNetworkIds.arbitrum]: arbitrum,
   [SupportedNetworkIds.optimism]: optimism,
   [SupportedNetworkIds.base]: base,
+  [SupportedNetworkIds.mantle]: mantle,
   [SupportedNetworkIds.ethereum]: mainnet,
 };
 
@@ -171,6 +185,7 @@ export const DEPLOYMENT_NETWORKS: SupportedNetworkIds[] = [
   SupportedNetworkIds.arbitrum,
   SupportedNetworkIds.optimism,
   SupportedNetworkIds.base,
+  SupportedNetworkIds.mantle,
   SupportedNetworkIds.ethereum,
 ];
 
@@ -192,6 +207,34 @@ export function getTokenConfig(
   if (!config) return undefined;
 
   return config.supportedTokens.find((token) => token.symbol === symbol);
+}
+
+export function getSupportedNetworkIdFromChainId(chainId: number): SupportedNetworkIds | undefined {
+  const entry = Object.entries(NETWORK_CONFIGS).find(([, config]) => config.id === chainId);
+  return entry?.[0] as SupportedNetworkIds | undefined;
+}
+
+export function normalizeSupportedNetworkId(
+  value: string | number | null | undefined
+): SupportedNetworkIds | undefined {
+  if (value === null || value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value === 'number') {
+    return getSupportedNetworkIdFromChainId(value);
+  }
+
+  if (Object.hasOwn(NETWORK_CONFIGS, value)) {
+    return value as SupportedNetworkIds;
+  }
+
+  const parsedChainId = Number.parseInt(value, value.startsWith('0x') ? 16 : 10);
+  if (!Number.isFinite(parsedChainId)) {
+    return undefined;
+  }
+
+  return getSupportedNetworkIdFromChainId(parsedChainId);
 }
 
 export function getNetworkDisplayName(networkId: SupportedNetworkIds): string {

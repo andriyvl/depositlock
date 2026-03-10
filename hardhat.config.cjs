@@ -40,6 +40,10 @@ module.exports = {
     base: {
       url: process.env.BASE_RPC_URL || "https://mainnet.base.org",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    mantle: {
+      url: process.env.MANTLE_RPC_URL || "https://rpc.mantle.xyz",
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     }
   }
 };

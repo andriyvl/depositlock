@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY
@@ -8,7 +8,22 @@ if (!supabaseUrl) {
 }
 
 if (!supabaseServiceKey) {
-  throw new Error('Missing environment variable: SUPABASE_SERVICE_KEY')
+  throw new Error(
+    'Missing environment variable: SUPABASE_SERVICE_KEY'
+  )
 }
 
-export const supabase = createClient(supabaseUrl, supabaseServiceKey)
+if (supabaseServiceKey.startsWith('sb_publishable_')) {
+  throw new Error('Invalid Supabase server key: use a server-side service role key, not a publishable key')
+}
+
+const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false,
+  },
+})
+
+export function getSupabaseAdminClient(): SupabaseClient {
+  return supabaseAdmin
+}

@@ -24,11 +24,21 @@ export default function ContractDetailPage() {
   const { user } = useAuth();
 
   const { fetchAgreement } = useAgreement(contractId!, user!);
-  const { currentAgreement, currentAgreementLoading, setCurrentAgreement, setCurrentAgreementLoading } = useAppStore();
+  const {
+    currentAgreement,
+    currentAgreementLoading,
+    setCurrentAgreement,
+    setCurrentAgreementLoading,
+    setCurrentAgreementStatusEvent,
+  } = useAppStore();
+
+  useEffect(() => {
+    setCurrentAgreementStatusEvent(undefined);
+  }, [contractId, setCurrentAgreementStatusEvent]);
 
   useEffect(() => {
     fetchAgreement();
-  }, [contractId, user?.address, setCurrentAgreement, setCurrentAgreementLoading]);
+  }, [contractId, fetchAgreement, setCurrentAgreement, setCurrentAgreementLoading, user?.address]);
 
   if (currentAgreementLoading) {
     return (
