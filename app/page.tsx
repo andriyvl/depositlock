@@ -1,90 +1,189 @@
 export const dynamic = "force-static";
 
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+import {
+  Bike,
+  Building2,
+  Camera,
+  Car,
+  Check,
+  CircleDollarSign,
+  Globe2,
+  LockKeyhole,
+  Rocket,
+  ShieldCheck,
+  Wallet,
+} from "lucide-react";
 import { HowItWorks } from "@/lib/features/home/how-it-works";
-import { Button } from "@/lib/components/ui/button";
+
+const RENTAL_SEGMENTS = [
+  {
+    title: "Bike rentals",
+    description: "Create deposit agreements for city bikes, e-bikes, and adventure gear.",
+    icon: Bike,
+  },
+  {
+    title: "Flat rentals",
+    description: "Protect bookings and long-term stays with transparent escrow terms.",
+    icon: Building2,
+  },
+  {
+    title: "Photo equipment",
+    description: "Secure high-value cameras, lenses, and lighting kits with confidence.",
+    icon: Camera,
+  },
+  {
+    title: "Transportation",
+    description: "Handle car, scooter, and van deposits with onchain settlement.",
+    icon: Car,
+  },
+];
+
+const PLATFORM_FEATURES = [
+  {
+    title: "Escrow by smart contract",
+    description: "Funds are locked inside the contract and released only according to the agreement terms.",
+    icon: LockKeyhole,
+  },
+  {
+    title: "Clear, auditable flow",
+    description: "Every contract and movement is verifiable onchain for both business and renter.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Built for small teams",
+    description: "Go live in minutes without custom integrations or legal-heavy back office setup.",
+    icon: Rocket,
+  },
+  {
+    title: "Wallet-native experience",
+    description: "Renters can connect, review terms, and fill deposits directly from their wallet.",
+    icon: Wallet,
+  },
+];
+
+const SUPPORTED_NETWORKS = ["Ethereum", "Arbitrum", "Base", "Optimism", "Polygon"];
 
 export default async function HomePage() {
   return (
-    <div className="min-h-screen">
-      <main className="py-20">
-        <div className="container mx-auto text-center max-w-4xl">
-          <Badge className="mb-6 bg-primary-100 text-primary-700 border-primary-200">
-            🚀 Web3 Escrow for Everyone
-          </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary-600 to-secondary-600 bg-clip-text text-transparent leading-tight">
-            Secure Crypto Deposits,
-            <br />
-            <span className="text-primary-500">Made Simple</span>
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-            Lock rental deposits safely on the blockchain. Perfect for apartments, equipment rentals, and any situation requiring secure fund escrow.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link href="/creator" className="px-8 py-3 rounded-md bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary/90 hover:to-secondary/90 text-primary-foreground">Create Agreement</Link>
-            <Link href="/contract/entry" className="px-8 py-3 rounded-md border bg-white hover:bg-grey-50 border-input text-outline-foreground">Fill Deposit</Link>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <div className="flex -space-x-2">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-500 border-2 border-background flex items-center justify-center">
-                <span className="text-white text-sm font-medium">A</span>
+    <div className="bg-[#f6f7f2] text-[#0b160f]">
+      <section className="px-4 pb-12 pt-14 md:pb-20 md:pt-20">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid gap-8 rounded-[2rem] bg-white p-8 shadow-[0_18px_60px_rgba(12,23,16,0.08)] md:grid-cols-[1.15fr_0.85fr] md:p-12">
+            <div>
+              <div className="mb-6 inline-flex items-center rounded-full border border-[#cde7cb] bg-[#e7fcd7] px-4 py-2 text-sm font-semibold text-[#13310d]">
+                Crypto escrow for rental businesses
               </div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-secondary-400 to-secondary-500 border-2 border-background flex items-center justify-center">
-                <span className="text-white text-sm font-medium">B</span>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-tertiary-400 to-tertiary-500 border-2 border-background flex items-center justify-center">
-                <span className="text-white text-sm font-medium">C</span>
+              <h1 className="text-4xl font-bold leading-tight md:text-6xl">
+                Protect every rental deposit with simple onchain escrow
+              </h1>
+              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[#3f4f44] md:text-2xl md:leading-relaxed">
+                DepositLock helps small rental businesses create secure crypto contracts for bikes, flats, photo equipment, and transportation rentals.
+              </p>
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+                <Link
+                  href="/creator"
+                  className="inline-flex items-center justify-center rounded-full bg-[#9fe870] px-8 py-3 text-lg font-semibold text-[#11290c] transition-colors hover:bg-[#8edc5d]"
+                >
+                  Create agreement
+                </Link>
+                <Link
+                  href="/contract/entry"
+                  className="inline-flex items-center justify-center rounded-full border border-[#20471a] px-8 py-3 text-lg font-semibold text-[#20471a] transition-colors hover:bg-[#eff9e8]"
+                >
+                  Fill deposit
+                </Link>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Trusted by <span className="font-semibold text-foreground">2,500+</span> users worldwide
-            </p>
+            <div className="rounded-[1.5rem] bg-[#163300] p-6 text-[#d9f6c8] md:p-8">
+              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#9fe870]">Supported networks</p>
+              <ul className="mt-5 space-y-3">
+                {SUPPORTED_NETWORKS.map((network) => (
+                  <li key={network} className="flex items-center gap-3 text-base md:text-lg">
+                    <Check className="h-5 w-5 text-[#9fe870]" />
+                    {network}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 rounded-2xl bg-[#1f4514] p-4">
+                <div className="flex items-center gap-2 text-[#9fe870]">
+                  <CircleDollarSign className="h-5 w-5" />
+                  <p className="font-semibold">Escrow with transparent terms</p>
+                </div>
+                <p className="mt-2 text-sm text-[#dcefd2]">
+                  Funds remain locked in-contract until the agreed deadline and conditions are met.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        <section id="features" className="py-20 px-4 bg-background/50 mt-16">
-          <div className="container mx-auto max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose DepositLock?</h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Built for the future of secure transactions with blockchain technology you can trust
-              </p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="rounded-xl border-0 shadow-lg bg-gradient-to-br from-primary-50 to-primary-100 p-6">
-                <h3 className="font-semibold mb-2">Trustless Security</h3>
-                <p className="text-sm text-primary-700">Smart contracts ensure funds are locked safely until the rental period ends</p>
-              </div>
-              <div className="rounded-xl border-0 shadow-lg bg-gradient-to-br from-secondary-50 to-secondary-100 p-6">
-                <h3 className="font-semibold mb-2">Mobile First</h3>
-                <p className="text-sm text-secondary-700">Beautiful, responsive design that works perfectly on any device</p>
-              </div>
-              <div className="rounded-xl border-0 shadow-lg bg-gradient-to-br from-tertiary-50 to-tertiary-100 p-6">
-                <h3 className="font-semibold mb-2">Lightning Fast</h3>
-                <p className="text-sm text-tertiary-700">Set up deposits in minutes with our intuitive process</p>
-              </div>
-            </div>
+      <section id="features" className="px-4 py-14 md:py-20">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl font-bold md:text-5xl">Made for real rental operations</h2>
+          <p className="mt-4 max-w-3xl text-lg text-[#46564b] md:text-2xl">
+            From independent owners to growing local fleets, DepositLock gives you a secure way to hold deposits without manual follow-up.
+          </p>
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
+            {RENTAL_SEGMENTS.map(({ title, description, icon: Icon }) => (
+              <article key={title} className="rounded-3xl border border-[#dbe6d8] bg-[#f1f4ee] p-6">
+                <div className="mb-5 inline-flex rounded-2xl bg-white p-3 text-[#15350f]">
+                  <Icon className="h-6 w-6" />
+                </div>
+                <h3 className="text-2xl font-semibold">{title}</h3>
+                <p className="mt-3 text-base text-[#4a5a50]">{description}</p>
+              </article>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <HowItWorks />
-
-        <section className="py-20 px-4 bg-gradient-to-r from-primary-500 to-secondary-500">
-          <div className="container mx-auto text-center max-w-4xl">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Secure Your First Deposit?</h2>
-            <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">Join thousands who trust DepositLock for secure, transparent crypto escrow</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="gradientPrimarySecondary" size="lg">
-                <Link href="/creator">Request Deposit</Link>
-              </Button>
-              <Button variant="outline" size="lg">
-                <Link href="/contract/entry" >Fill Deposit</Link>
-              </Button>
-            </div>
+      <section className="px-4 pb-10 md:pb-16">
+        <div className="container mx-auto max-w-6xl rounded-[2rem] bg-[#163300] p-8 text-white md:p-12">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#9fe870]">Why businesses choose DepositLock</p>
+            <h2 className="mt-3 text-3xl font-bold leading-tight md:text-5xl">Reduce disputes and secure deposits with auditable agreements</h2>
           </div>
-        </section>
-      </main>
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
+            {PLATFORM_FEATURES.map(({ title, description, icon: Icon }) => (
+              <article key={title} className="rounded-3xl bg-[#1f4514] p-6">
+                <Icon className="h-6 w-6 text-[#9fe870]" />
+                <h3 className="mt-4 text-2xl font-semibold">{title}</h3>
+                <p className="mt-2 text-[#d7ebcb]">{description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <HowItWorks />
+
+      <section className="px-4 pb-20 pt-8">
+        <div className="container mx-auto max-w-6xl rounded-[2rem] border border-[#d4dfd0] bg-white px-8 py-12 text-center md:px-12">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#ebf8e3] text-[#214819]">
+            <Globe2 className="h-7 w-7" />
+          </div>
+          <h2 className="mt-6 text-3xl font-bold md:text-5xl">Start secure crypto escrow in minutes</h2>
+          <p className="mx-auto mt-4 max-w-3xl text-lg text-[#4a5a50] md:text-2xl">
+            Launch your next rental agreement on Ethereum and major L2 networks with a workflow built for speed and trust.
+          </p>
+          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+            <Link
+              href="/creator"
+              className="inline-flex items-center justify-center rounded-full bg-[#9fe870] px-8 py-3 text-lg font-semibold text-[#11290c] transition-colors hover:bg-[#8edc5d]"
+            >
+              Request deposit
+            </Link>
+            <Link
+              href="/contract/entry"
+              className="inline-flex items-center justify-center rounded-full border border-[#20471a] px-8 py-3 text-lg font-semibold text-[#20471a] transition-colors hover:bg-[#eff9e8]"
+            >
+              Fill deposit
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
