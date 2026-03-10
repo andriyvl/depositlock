@@ -290,12 +290,10 @@ export function CreatorForm() {
     const description = formData.description.trim() || "Secure deposit agreement created via DepositLock";
 
     let isCancelled = false;
-    const runEstimate = async (isInitial: boolean) => {
-      if (isInitial) {
-        setIsEstimatingCost(true);
-      }
-      setEstimateError(null);
+    setIsEstimatingCost(true);
+    setEstimateError(null);
 
+    const timeoutId = window.setTimeout(async () => {
       try {
         const estimate = await estimateDeploymentCostRef.current(
           formData.amount,
@@ -309,25 +307,21 @@ export function CreatorForm() {
         if (!isCancelled) {
           setDeploymentEstimate(estimate);
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (!isCancelled) {
-          setEstimateError(error?.message || "Unable to estimate deployment cost.");
+          const message = error instanceof Error ? error.message : "Unable to estimate deployment cost.";
+          setEstimateError(message);
         }
       } finally {
         if (!isCancelled) {
           setIsEstimatingCost(false);
         }
       }
-    };
-
-    runEstimate(true);
-    const intervalId = setInterval(() => {
-      runEstimate(false);
-    }, 5000);
+    }, 500);
 
     return () => {
       isCancelled = true;
-      clearInterval(intervalId);
+      window.clearTimeout(timeoutId);
     };
   }, [
     formData.amount,

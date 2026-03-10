@@ -118,7 +118,7 @@ export function ContractEntry() {
                   <Input
                     id="depositLink"
                     type="text"
-                    placeholder="https://depositlock.com/contract/0x742d35... or 0x742d35..."
+                    placeholder="https://depositlock.devviy.com/contract/0x742d35... or 0x742d35..."
                     value={depositLink}
                     onChange={(e) => setDepositLink(e.target.value)}
                     className="flex-1"
@@ -203,8 +203,8 @@ export function ContractEntry() {
               <div>
                 <h4 className="font-medium mb-2">Valid Link Examples:</h4>
                 <ul className="space-y-1 text-muted-foreground">
-                  <li>• https://depositlock.com/contract/0x742d35...</li>
-                  <li>• depositlock.com/contract/0x742d35...</li>
+                  <li>• https://depositlock.devviy.com/contract/0x742d35...</li>
+                  <li>• depositlock.devviy.com/contract/0x742d35...</li>
                   <li>• 0x742d35Cc6634C0532925a3b8D404A7e64ef9d4F7</li>
                 </ul>
               </div>
