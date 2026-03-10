@@ -6,7 +6,7 @@ import { getContracts } from './db-contracts/contracts.actions';
 import { useAppStore } from '../store/app.store';
 import { useContract } from './contract.hook';
 
-export function useAgreement(contractAddress: string, user: User) {
+export function useAgreement(contractAddress: string, user: User | null) {
   const { getContract } = useContract();
 
   const { setCurrentAgreement, setCurrentAgreementLoading, setCurrentAgreementError } = useAppStore();

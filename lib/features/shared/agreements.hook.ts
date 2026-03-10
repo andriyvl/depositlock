@@ -1,5 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../auth/auth.hook';
+import { useState, useCallback } from 'react';
 import { useAppStore } from '../store/app.store';
 import { getContracts } from './db-contracts/contracts.actions';
 import { mapToAgreement } from '@/lib/helpers/contract.helpers';
@@ -9,7 +8,7 @@ import { User } from '@/lib/model/agreement.types';
 export function useAgreements({user}: {user: User | null}) {
   const { getContract } = useContract();
 
-  const { agreements, setAgreements, setUserDatabaseContracts, userDatabaseContracts } = useAppStore();
+  const { agreements, setAgreements, setUserDatabaseContracts } = useAppStore();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

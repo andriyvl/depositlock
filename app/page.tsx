@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { HowItWorks } from "@/lib/features/home/how-it-works";
 import { Button } from "@/lib/components/ui/button";
 
-export default async function HomePage() {
+export default function HomePage() {
   return (
     <div className="min-h-screen">
       <main className="py-20">
