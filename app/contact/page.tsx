@@ -2,11 +2,21 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Mail, MessageSquareQuote, ShieldCheck } from "lucide-react";
 import { PublicPageShell } from "@/lib/features/public/public-page-shell";
+import { buildPageMetadata } from "@/lib/utils/metadata.utils";
 
-export const metadata: Metadata = {
-  title: "Contact | DepositLock",
-  description: "Reach out to the DepositLock team.",
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Contact support for escrow and contract issues",
+  description:
+    "Contact DepositLock support for live escrow contracts, wallet issues, network troubleshooting, and rental deposit workflow questions.",
+  path: "/contact",
+  keywords: [
+    "DepositLock support",
+    "crypto escrow support",
+    "rental deposit support",
+    "contract troubleshooting",
+    "wallet transaction help",
+  ],
+});
 
 const contactCards = [
   {

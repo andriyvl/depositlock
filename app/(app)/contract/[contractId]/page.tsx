@@ -23,10 +23,11 @@ export default function ContractDetailPage() {
   const contractId = params?.contractId as string | undefined;
   const { user } = useAuth();
 
-  const { fetchAgreement } = useAgreement(contractId!, user!);
+  const { fetchAgreement } = useAgreement(contractId || "", user);
   const {
     currentAgreement,
     currentAgreementLoading,
+    currentAgreementError,
     setCurrentAgreement,
     setCurrentAgreementLoading,
     setCurrentAgreementStatusEvent,
@@ -37,14 +38,19 @@ export default function ContractDetailPage() {
   }, [contractId, setCurrentAgreementStatusEvent]);
 
   useEffect(() => {
+    if (!contractId) {
+      setCurrentAgreementLoading(false);
+      return;
+    }
+
     fetchAgreement();
-  }, [contractId, fetchAgreement, setCurrentAgreement, setCurrentAgreementLoading, user?.address]);
+  }, [contractId, fetchAgreement, setCurrentAgreementLoading]);
 
   if (currentAgreementLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md">
-          <CardContent className="flex flex-col items-center justify-center py-12">
+          <CardContent className="flex flex-col items-center justify-center py-12 mt-8">
             <Loader2 className="w-8 h-8 animate-spin text-primary-500 mb-4" />
             <p className="text-muted-foreground">Loading deposit agreement...</p>
           </CardContent>
@@ -59,7 +65,7 @@ export default function ContractDetailPage() {
         <Card className="w-full max-w-md">
           <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
             <AlertCircle className="w-8 h-8 text-red-500 mb-4" />
-            <p className="text-muted-foreground">Failed to load agreement.</p>
+            <p className="text-muted-foreground">{currentAgreementError || "Failed to load agreement."}</p>
             <p className="text-sm text-muted-foreground/70">Contract ID: {contractId}</p>
             <Button
               onClick={() => window.location.reload()}

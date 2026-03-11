@@ -1,8 +1,16 @@
 import "./globals.css";
 import { Providers } from "./providers";
+import { type Metadata } from "next";
 import { type ReactNode } from "react";
 import { Inter, Inter_Tight } from "next/font/google";
 import { ConditionalLayout } from "./components/conditional-layout";
+import {
+  DEFAULT_PAGE_DESCRIPTION,
+  DEFAULT_PAGE_KEYWORDS,
+  DEFAULT_PAGE_TITLE,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/utils/metadata.utils";
 
 const bodyFont = Inter({
   subsets: ["latin"],
@@ -16,9 +24,37 @@ const displayFont = Inter_Tight({
   variable: "--font-display",
 });
 
-export const metadata = {
-  title: "DepositLock – Escrow",
-  description: "Crypto-native escrow for deposits",
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
+  title: `${SITE_NAME} | ${DEFAULT_PAGE_TITLE}`,
+  description: DEFAULT_PAGE_DESCRIPTION,
+  keywords: DEFAULT_PAGE_KEYWORDS,
+  category: "finance",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} | ${DEFAULT_PAGE_TITLE}`,
+    description: DEFAULT_PAGE_DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary",
+    title: `${SITE_NAME} | ${DEFAULT_PAGE_TITLE}`,
+    description: DEFAULT_PAGE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

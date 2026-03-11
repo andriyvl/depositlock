@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
 import { AlertTriangle, FileText, Scale, Shield } from "lucide-react";
 import { PublicPageShell } from "@/lib/features/public/public-page-shell";
+import { buildPageMetadata } from "@/lib/utils/metadata.utils";
 
-export const metadata: Metadata = {
-  title: "Terms of Service | DepositLock",
-  description: "Terms for using the DepositLock escrow platform.",
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Terms for using the escrow interface",
+  description:
+    "Read the DepositLock terms covering non-custodial escrow use, wallet responsibility, infrastructure risk, and the boundaries of the product interface.",
+  path: "/terms",
+  keywords: [
+    "DepositLock terms",
+    "escrow terms of service",
+    "non-custodial escrow terms",
+    "wallet responsibility terms",
+  ],
+});
 
 const termsSections = [
   {

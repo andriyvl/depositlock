@@ -3,11 +3,21 @@ import Link from "next/link";
 import { ArrowRight, CircleDollarSign, Network, ShieldCheck } from "lucide-react";
 import { Button } from "@/lib/components/ui/button";
 import { PublicPageShell } from "@/lib/features/public/public-page-shell";
+import { buildPageMetadata } from "@/lib/utils/metadata.utils";
 
-export const metadata: Metadata = {
-  title: "FAQ | DepositLock",
-  description: "Common questions about DepositLock networks, currencies, fees, and escrow workflows.",
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "FAQ on networks, stablecoins, fees, and escrow flows",
+  description:
+    "Read answers about supported networks, stablecoins, gas fees, creator and depositor flows, disputes, and releases in DepositLock.",
+  path: "/faq",
+  keywords: [
+    "DepositLock FAQ",
+    "supported escrow networks",
+    "USDC and USDT escrow",
+    "rental deposit workflow",
+    "Ethereum L2 escrow help",
+  ],
+});
 
 const faqItems = [
   {

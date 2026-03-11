@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { useCallback } from 'react';
 import { useWallet } from '../web3/wallet/wallet.hook';
 
 // Import the artifacts directly from the compiled JSON
@@ -38,10 +39,21 @@ type DepositApprovalState = {
   isApproved: boolean;
 };
 
+const READ_TIMEOUT_MS = 4000;
+
+async function withTimeout<T>(promise: Promise<T>, timeoutMs = READ_TIMEOUT_MS): Promise<T> {
+  return await Promise.race([
+    promise,
+    new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error('Request timed out')), timeoutMs);
+    }),
+  ]);
+}
+
 export function useContract() {
   const wallet = useWallet();
 
-  const resolveContractNetwork = async (
+  const resolveContractNetwork = useCallback(async (
     contractAddress: string,
     preferredNetworkId?: SupportedNetworkIds
   ): Promise<SupportedNetworkIds> => {
@@ -58,20 +70,25 @@ export function useContract() {
       return true;
     });
 
-    for (const networkId of uniqueCandidates) {
-      try {
-        const provider = getReadonlyProvider(networkId);
-        const code = await provider.getCode(contractAddress);
-        if (code && code !== '0x') {
-          return networkId;
+    const probeResults = await Promise.all(
+      uniqueCandidates.map(async (networkId) => {
+        try {
+          const provider = getReadonlyProvider(networkId);
+          const code = await withTimeout(provider.getCode(contractAddress));
+          return { networkId, hasCode: Boolean(code && code !== '0x') };
+        } catch {
+          return { networkId, hasCode: false };
         }
-      } catch {
-        // Try the next network candidate.
-      }
+      })
+    );
+
+    const matchedNetwork = probeResults.find((result) => result.hasCode)?.networkId;
+    if (matchedNetwork) {
+      return matchedNetwork;
     }
 
     return preferredNetworkId || SupportedNetworkIds.polygon;
-  };
+  }, []);
 
   const getDeploymentRequest = async (
     amount: string,
@@ -263,7 +280,7 @@ export function useContract() {
     };
   };
 
-  const getContract = async (
+  const getContract = useCallback(async (
     contractAddress: string,
     networkId: SupportedNetworkIds = SupportedNetworkIds.polygon
   ): Promise<BlockchainContract> => {
@@ -293,7 +310,7 @@ export function useContract() {
       tokenAddress,
       tokenSymbol,
       tokenDecimals,
-    ] = await Promise.all([
+    ] = await withTimeout(Promise.all([
       contract.getFunction('creator')(),
       contract.getFunction('depositor')(),
       contract.getFunction('amount')(),
@@ -315,7 +332,7 @@ export function useContract() {
       contract.getFunction('tokenAddress')(),
       contract.getFunction('tokenSymbol')(),
       contract.getFunction('tokenDecimals')(),
-    ]);
+    ]), 6000);
 
     const tokenDecimalsNumber = Number(tokenDecimals);
 
@@ -354,7 +371,7 @@ export function useContract() {
       releaseDescription: releaseDescription || null,
       cancelReason: cancelReason || null,
     };
-  };
+  }, [resolveContractNetwork]);
 
   const cancelContract = async (contractAddress: string, reason: string) => {
     const signer = await wallet.getSigner();

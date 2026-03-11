@@ -1,5 +1,6 @@
 export const dynamic = "force-static";
 
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -14,6 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/lib/components/ui/button";
 import { HowItWorks } from "@/lib/features/home/how-it-works";
+import { buildPageMetadata } from "@/lib/utils/metadata.utils";
 
 const rentalUseCases = [
   {
@@ -48,10 +50,28 @@ const networkHighlights = [
 ] as const;
 
 const keyFacts = [
-  { label: "What is needed", value: "Any Web3 wallet with Etherium address" },
-  { label: "Fees", value: "Everithing is free. Pay only network fee ($0.01 - $0.99)" },
-  { label: "Trust", value: "Full transparency with on-chain transactions" },
+  { label: "Setup", value: "Create an agreement in minutes and share one contract link" },
+  { label: "Funding", value: "Use a Web3 wallet instead of cash handling or bank transfers" },
+  { label: "Visibility", value: "Track funding and resolution through on-chain transactions" },
 ] as const;
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "On-chain rental deposit escrow for rental businesses",
+  description:
+    "Create, fund, and manage crypto rental deposit escrow agreements for bikes, flats, equipment, transport, and other rental flows across Ethereum and supported L2 networks.",
+  path: "/",
+  keywords: [
+    "rental deposit escrow",
+    "crypto rental deposits",
+    "on-chain rental deposits",
+    "small rental business escrow",
+    "Ethereum rental escrow",
+    "L2 escrow",
+    "USDC escrow",
+    "USDT escrow",
+    "non-custodial deposit escrow",
+  ],
+});
 
 
 
@@ -174,10 +194,10 @@ export default function HomePage() {
           <div className="max-w-md">
             <p className="text-sm font-semibold uppercase tracking-[0.1em] text-secondary-700">What is needed</p>
             <h2 className="mt-4 font-display text-[clamp(2.8rem,5vw,4.5rem)] font-black leading-[0.98] tracking-[-0.06em] text-foreground">
-              Real-life securtity with Web3 crypto wallets.
+              Escrow terms backed by Web3 wallets.
             </h2>
             <p className="mt-5 text-lg leading-8 text-muted-foreground">
-              Use any Web3 crypto wallet in one of the selected Etherium networks to complete the escrow contract flow.
+              Use a supported Web3 wallet on Ethereum or a supported L2 to create, fund, and settle rental deposit agreements.
             </p>
           </div>
 

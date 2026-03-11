@@ -1,5 +1,5 @@
 
-
+import { useCallback } from 'react';
 import { mapToAgreement, verifyUserRole } from '@/lib/helpers/contract.helpers';
 import { User, UserDatabaseContract } from '@/lib/model/agreement.types';
 import { SupportedNetworkIds } from '@/lib/model/network.config';
@@ -7,13 +7,13 @@ import { addContract as addContractAction, getContracts } from './db-contracts/c
 import { useAppStore } from '../store/app.store';
 import { useContract } from './contract.hook';
 
-export function useAgreement(contractAddress: string, user: User) {
+export function useAgreement(contractAddress: string, user: User | null) {
   const { getContract } = useContract();
 
   const { setCurrentAgreement, setCurrentAgreementLoading, setCurrentAgreementError } = useAppStore();
 
 
-  async function fetchAgreement() {
+  const fetchAgreement = useCallback(async () => {
     if (!contractAddress) {
       setCurrentAgreement(null);
       setCurrentAgreementLoading(false);
@@ -71,7 +71,15 @@ export function useAgreement(contractAddress: string, user: User) {
     } finally {
       setCurrentAgreementLoading(false);
     }
-  }
+  }, [
+    contractAddress,
+    getContract,
+    setCurrentAgreement,
+    setCurrentAgreementError,
+    setCurrentAgreementLoading,
+    user?.address,
+    user?.networkId,
+  ]);
 
   return { fetchAgreement };
 }

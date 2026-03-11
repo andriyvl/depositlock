@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
 import { Eye, Globe2, LockKeyhole, UserRoundSearch } from "lucide-react";
 import { PublicPageShell } from "@/lib/features/public/public-page-shell";
+import { buildPageMetadata } from "@/lib/utils/metadata.utils";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | DepositLock",
-  description: "Learn how DepositLock handles wallet data and on-chain activity.",
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Privacy policy for wallet data and on-chain activity",
+  description:
+    "Learn how DepositLock handles wallet addresses, contract metadata, transaction hashes, and third-party infrastructure in a non-custodial product.",
+  path: "/privacy",
+  keywords: [
+    "DepositLock privacy policy",
+    "wallet address privacy",
+    "on-chain data privacy",
+    "non-custodial escrow privacy",
+  ],
+});
 
 const privacySections = [
   {

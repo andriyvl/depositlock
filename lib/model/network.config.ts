@@ -242,6 +242,26 @@ export function getNetworkDisplayName(networkId: SupportedNetworkIds): string {
   return config?.displayName || networkId;
 }
 
+export function getNetworkIconSrc(networkId: SupportedNetworkIds): string {
+  switch (networkId) {
+    case SupportedNetworkIds.ethereum:
+      return '/networks/ethereum.svg';
+    case SupportedNetworkIds.arbitrum:
+      return '/networks/arbitrum.svg';
+    case SupportedNetworkIds.base:
+      return '/networks/base.svg';
+    case SupportedNetworkIds.optimism:
+      return '/networks/optimism.svg';
+    case SupportedNetworkIds.polygon:
+    case SupportedNetworkIds.polygonAmoy:
+      return '/networks/polygon.svg';
+    case SupportedNetworkIds.mantle:
+      return '/networks/mantle.svg';
+    default:
+      return '/networks/ethereum.svg';
+  }
+}
+
 export function getDefaultCurrency(networkId: SupportedNetworkIds): string {
   const config = getNetworkConfig(networkId);
   if (!config) return 'USDC';
