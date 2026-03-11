@@ -1,7 +1,13 @@
-
 # DepositLock
 
 DepositLock is a decentralized escrow application for securely holding rental deposits with ERC-20 stablecoins.
+
+## Database
+
+DepositLock now uses direct Postgres access for server-side agreement storage.
+
+- Connection strings: `DATABASE_URL`, `DATABASE_URL_POOLED`, `DATABASE_URL_UNPOOLED`
+- Repo-owned schema: `database/schema/user-contracts.sql`
 
 ## Getting Started
 

@@ -1,5 +1,9 @@
 - [ ] Cleanup the codebase
 - [ ] Improve performance (site is hanging at random times)
+- [ ] Migrate database from Supabase to Neon
+  - [ ] Provision Neon on Vercel and disable scale-to-zero
+  - [ ] Export Supabase and import into Neon
+  - [ ] Replace environment variables and validate dashboard flows
 - [ ] Create a Privacy page
 - [x] Create a Terms page
 - [x] Create a FAQ page

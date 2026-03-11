@@ -12,42 +12,18 @@
     "jsx": "preserve",
     "skipLibCheck": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@/lib/*": [
-        "./lib/*"
-      ],
-      "@/components/*": [
-        "./lib/components/*"
-      ],
-      "@/components/ui/*": [
-        "./lib/components/ui/*"
-      ],
-      "@/styles/*": [
-        "./lib/styles/*"
-      ],
-      "@/hooks/*": [
-        "./lib/hooks/*"
-      ],
-      "@/helpers/*": [
-        "./lib/helpers/*"
-      ],
-      "@/model/*": [
-        "./lib/model/*"
-      ],
-      "@/lib-shared/*": [
-        "./lib-shared/*"
-      ],
-      "@/lib-shared/model/*": [
-        "./lib-shared/model/*"
-      ]
+      "@/*": ["./*"],
+      "@/lib/*": ["./lib/*"],
+      "@/components/*": ["./lib/components/*"],
+      "@/components/ui/*": ["./lib/components/ui/*"],
+      "@/styles/*": ["./lib/styles/*"],
+      "@/hooks/*": ["./lib/hooks/*"],
+      "@/helpers/*": ["./lib/helpers/*"],
+      "@/model/*": ["./lib/model/*"],
+      "@/lib-shared/*": ["./lib-shared/*"],
+      "@/lib-shared/model/*": ["./lib-shared/model/*"]
     },
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "incremental": true,
     "allowJs": true,
     "strict": true,
@@ -61,12 +37,7 @@
     "lib-shared/**/*",
     "lib/**/*",
     "next-env.d.ts",
-    "supabase",
     ".next/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "server"
-  ]
+  "exclude": ["node_modules", "dist", "server"]
 }

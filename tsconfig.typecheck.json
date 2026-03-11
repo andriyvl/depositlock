@@ -6,13 +6,7 @@
     "app/**/*",
     "lib-shared/**/*",
     "lib/**/*",
-    "next-env.d.ts",
-    "supabase"
+    "next-env.d.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "server",
-    ".next"
-  ]
+  "exclude": ["node_modules", "dist", "server", ".next"]
 }
