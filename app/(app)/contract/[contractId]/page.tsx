@@ -43,7 +43,7 @@ export default function ContractDetailPage() {
   if (currentAgreementLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-96 shadow-lg border-0 bg-background/80 backdrop-blur-sm">
+        <Card className="w-full max-w-md">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-primary-500 mb-4" />
             <p className="text-muted-foreground">Loading deposit agreement...</p>
@@ -56,7 +56,7 @@ export default function ContractDetailPage() {
   if (!currentAgreement && !currentAgreementLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-96 shadow-lg border-0 bg-background/80 backdrop-blur-sm">
+        <Card className="w-full max-w-md">
           <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
             <AlertCircle className="w-8 h-8 text-red-500 mb-4" />
             <p className="text-muted-foreground">Failed to load agreement.</p>
@@ -79,10 +79,10 @@ export default function ContractDetailPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="container py-8 sm:py-12">
         <ContractEventBanner agreement={currentAgreement} />
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-6">
             <ContractDetailsCard agreement={currentAgreement} />
 

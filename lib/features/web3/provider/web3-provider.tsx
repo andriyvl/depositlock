@@ -16,7 +16,7 @@ const metadata = {
   name: "DepositLock",
   description: "DepositLock",
   url: url,
-  icons: [url + "/favicon.ico"],
+  icons: [url + "/favicon.svg"],
 };
 
 const supportedNetworks: [typeof polygon, typeof arbitrum, typeof optimism, typeof base, typeof mantle, typeof mainnet] = [

@@ -85,7 +85,7 @@ const APP_NETWORK_CONFIG: Record<SupportedNetworkIds, Partial<AppNetworkConfig>>
       {
         symbol: 'USDT',
         name: 'Tether USD',
-        address: '0xFd086bC7CD5C481DCC9C85ebe478A1C0b69FCbb9',
+        address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
         decimals: 6,
       },
     ],

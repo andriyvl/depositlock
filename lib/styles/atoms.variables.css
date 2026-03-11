@@ -1,32 +1,32 @@
 :host, :root {
     /* SHADOWS */
-    --card-shadow-color: rgba(0, 0, 0, 0.24);
-    --card-shadow: 0px 2px 2px 0px var(--card-shadow-color);
+    --card-shadow-color: rgba(18, 24, 16, 0.18);
+    --card-shadow: 0px 28px 70px -36px var(--card-shadow-color);
 
-    --floating-card-shadow-color: rgba(0, 0, 0, 0.25);
-    --floating-card-shadow: 0px 2px 8px 0px var(--floating-card-shadow-color);
+    --floating-card-shadow-color: rgba(18, 24, 16, 0.22);
+    --floating-card-shadow: 0px 18px 44px -26px var(--floating-card-shadow-color);
 
     /* TODO: put gradients here? */
 
     /* TEXT & ICON & BACKGROUND & BORDER */
-    --clickable-text-color: var(--primary);
+    --clickable-text-color: var(--secondary);
     --light-label-text: var(--stone-grey);
     --placeholder-text: var(--metal-grey);
-    --accent-text: var(--primary);
+    --accent-text: var(--secondary);
     --default-text: var(--gun-powder-grey);
     --active-label-text: var(--white-grey);
     --default-label-text: var(--gun-powder-grey);
-    --icon-color: var(--primary);
+    --icon-color: var(--secondary);
 
-    --active-bg: var(--gun-powder-grey);
-    --active-border: var(--gun-powder-grey);
-    --active-border-hover: var(--stone-grey);
+    --active-bg: var(--secondary);
+    --active-border: var(--secondary);
+    --active-border-hover: var(--mid-blue);
 
     --outline: var(--color-0);
     --outline-hover: var(--outline);
-    --outline-border: var(--primary);
-    --outline-border-hover: var(--primary-hover);
-    --outline-foreground: var(--primary);
+    --outline-border: var(--secondary);
+    --outline-border-hover: var(--secondary-hover);
+    --outline-foreground: var(--secondary);
     --outline-foreground-hover: var(--outline-foreground);
 
     --default-bg: var(--light-fog-grey);
@@ -54,7 +54,7 @@
 
     /* CARD */
     --card-bg: var(--color-0);
-    --card-border-radius: 24px;
+    --card-border-radius: 32px;
 
     /* FLOATING CARD */
     --floating-card-bg: var(--default-menu-bg);
@@ -75,9 +75,9 @@
 
     --dropdown-item-hovered: var(--primary);
     --dropdown-text-hovered: var(--primary-foreground);
-    --dropdown-sm-border-radius: 24px;
-    --dropdown-md-border-radius: 24px;
-    --dropdown-lg-border-radius: 24px;
+    --dropdown-sm-border-radius: 20px;
+    --dropdown-md-border-radius: 20px;
+    --dropdown-lg-border-radius: 20px;
 
     --dropdown-sm-padding-right: 8px;
     --dropdown-sm-padding-left: 12px;
@@ -192,7 +192,7 @@
     --share-modal-divider-bg: var(--ash-soft-grey);
     /* INPUT */
     --input-bg: var(--light-fog-grey);
-    --input-radius: 16px;
+    --input-radius: 20px;
     --input-bg-readonly: var(--light-fog-grey);
     --input-border-readonly: var(--fog-grey);
 
@@ -206,8 +206,8 @@
     --button-primary: var(--primary);
     --button-primary-hover: var(--primary-hover);
     --buttom-primary-active: var(--primary-active);
-    --button-primary-shadow: none;
-    --button-primary-shadow-hover: none;
+    --button-primary-shadow: var(--card-shadow);
+    --button-primary-shadow-hover: var(--card-shadow);
     --button-primary-border: var(--primary-border);
     --button-primary-border-hover: var(--primary-border-hover);
     --button-primary-foreground: var(--primary-foreground);
@@ -224,8 +224,8 @@
     --button-secondary: var(--secondary);
     --button-secondary-hover: var(--secondary-hover);
     --button-secondary-active: var(--secondary-active);
-    --button-secondary-shadow: none;
-    --button-secondary-shadow-hover: none;
+    --button-secondary-shadow: var(--card-shadow);
+    --button-secondary-shadow-hover: var(--card-shadow);
     --button-secondary-border: var(--secondary-border);
     --button-secondary-border-hover: var(--secondary-border-hover);
     --button-secondary-foreground: var(--secondary-foreground);
@@ -242,8 +242,8 @@
     --button-tertiary: var(--tertiary);
     --button-tertiary-hover: var(--tertiary-hover);
     --button-tertiary-active: var(--tertiary-active);
-    --button-tertiary-shadow: none;
-    --button-tertiary-shadow-hover: none;
+    --button-tertiary-shadow: var(--card-shadow);
+    --button-tertiary-shadow-hover: var(--card-shadow);
     --button-tertiary-border: var(--tertiary-border);
     --button-tertiary-border-hover: var(--tertiary-border-hover);
     --button-tertiary-foreground: var(--tertiary-foreground);

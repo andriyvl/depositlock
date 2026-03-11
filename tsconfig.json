@@ -55,14 +55,14 @@
     "resolveJsonModule": true
   },
   "include": [
-    "app/**/*",
     "**/*.ts",
     "**/*.tsx",
+    "app/**/*",
     "lib-shared/**/*",
     "lib/**/*",
     "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "supabase"
+    "supabase",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

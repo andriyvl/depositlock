@@ -11,14 +11,12 @@ interface ConnectWalletProps {
   className?: string;
 }
 
-export function ConnectWallet({ variant = "tertiary", className }: ConnectWalletProps) {
+export function ConnectWallet({ variant = "outline", className }: ConnectWalletProps) {
   const auth = useAuth();
   const { isAuthLoading } = useAppStore();
 
   if (auth.isAuthenticated && auth.user?.address) {
-    // TODO: add network 
-    // <span className="text-muted-foreground flex items-center"><Network className="w-3 h-3 mr-1" />Network: <span className="font-medium ml-1 text-foreground"> {getNetworkDisplayName(agreement.network)}</span></span>
-    return <UnifiedBadge type="address" size="m" value={auth.user.address} value2={auth.user.networkId} >
+    return <UnifiedBadge type="address" size="m" value={auth.user.address} value2={auth.user.networkId}>
       <Wallet className="w-4 h-4 mr-2" />
     </UnifiedBadge>;
   }

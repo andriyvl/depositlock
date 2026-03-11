@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@/lib/components/ui/card";
-import { Shield, DollarSign, TrendingUp, Clock } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/lib/components/ui/card";
+import { CircleDollarSign, Clock3, Layers3, Shield, Sparkles, TriangleAlert, type LucideIcon } from "lucide-react";
 
 interface StatusWidgetsProps {
   stats: {
@@ -12,87 +12,102 @@ interface StatusWidgetsProps {
   };
 }
 
+interface WidgetConfigItem {
+  key: keyof StatusWidgetsProps["stats"];
+  label: string;
+  valueKey: keyof StatusWidgetsProps["stats"];
+  icon: LucideIcon;
+  panelClassName: string;
+  iconClassName: string;
+  labelClassName?: string;
+  valueClassName?: string;
+}
+
+const widgetConfig: WidgetConfigItem[] = [
+  {
+    key: "total",
+    label: "Total",
+    valueKey: "total",
+    icon: Shield,
+    panelClassName: "bg-white/86",
+    iconClassName: "bg-primary text-primary-foreground",
+  },
+  {
+    key: "pending",
+    label: "Pending",
+    valueKey: "pending",
+    icon: CircleDollarSign,
+    panelClassName: "bg-primary-50/92",
+    iconClassName: "bg-primary text-primary-foreground",
+  },
+  {
+    key: "filled",
+    label: "Filled",
+    valueKey: "filled",
+    icon: Layers3,
+    panelClassName: "bg-tertiary-50/92",
+    iconClassName: "bg-tertiary-500 text-white",
+  },
+  {
+    key: "disputed",
+    label: "Disputed",
+    valueKey: "disputed",
+    icon: TriangleAlert,
+    panelClassName: "bg-destructive-50/92",
+    iconClassName: "bg-destructive text-white",
+  },
+  {
+    key: "released",
+    label: "Released",
+    valueKey: "released",
+    icon: Sparkles,
+    panelClassName: "bg-secondary text-secondary-foreground",
+    iconClassName: "bg-white/12 text-white",
+    labelClassName: "text-white/72",
+    valueClassName: "text-white",
+  },
+  {
+    key: "cancelled",
+    label: "Canceled",
+    valueKey: "cancelled",
+    icon: Clock3,
+    panelClassName: "bg-muted/80",
+    iconClassName: "bg-white text-secondary-700",
+  },
+] as const;
+
 export function StatusWidgets({ stats }: StatusWidgetsProps) {
   return (
-    <div className="grid lg:grid-cols-6 lg:grid-rows-1 grid-cols-3 grid-rows-2 gap-6 mb-8">
-      <Card className="border-0 shadow-lg bg-gradient-to-br from-primary-50 to-primary-100">
-        <CardContent className="sm:p-6 p-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-primary-600">Total</p>
-              <p className="text-2xl sm:text-3xl font-bold text-primary-700">{stats.total}</p>
-            </div>
-            <div className="w-6 h-6 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-400 to-primary-500 rounded-2xl flex items-center justify-center">
-              <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="border-0 shadow-lg bg-gradient-to-br from-accent-50 to-accent-100">
-        <CardContent className="sm:p-6 p-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-accent-600">Pending</p>
-              <p className="text-2xl sm:text-3xl font-bold text-accent-700">{stats.pending}</p>
-            </div>
-            <div className="w-6 h-6 sm:w-12 sm:h-12 bg-gradient-to-br from-accent-400 to-accent-500 rounded-2xl flex items-center justify-center">
-              <DollarSign className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="border-0 shadow-lg bg-gradient-to-br from-tertiary-50 to-tertiary-100">
-        <CardContent className="sm:p-6 p-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-tertiary-600">Filled</p>
-              <p className="text-2xl sm:text-3xl font-bold text-tertiary-700">{stats.filled}</p>
-            </div>
-            <div className="w-6 h-6 sm:w-12 sm:h-12 bg-gradient-to-br from-tertiary-400 to-tertiary-500 rounded-2xl flex items-center justify-center">
-              <TrendingUp className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="border-0 shadow-lg bg-gradient-to-br from-destructive-50 to-destructive-100">
-        <CardContent className="sm:p-6 p-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-destructive-600">Disputed</p>
-              <p className="text-2xl sm:text-3xl font-bold text-destructive-700">{stats.disputed}</p>
-            </div>
-            <div className="w-6 h-6 sm:w-12 sm:h-12 bg-gradient-to-br from-destructive-400 to-destructive-500 rounded-2xl flex items-center justify-center">
-              <DollarSign className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="border-0 shadow-lg bg-gradient-to-br from-secondary-50 to-secondary-100">
-        <CardContent className="sm:p-6 p-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-secondary-600">Released</p>
-              <p className="text-2xl sm:text-3xl font-bold text-secondary-700">{stats.released}</p>
-            </div>
-            <div className="w-6 h-6 sm:w-12 sm:h-12 bg-gradient-to-br from-secondary-400 to-secondary-500 rounded-2xl flex items-center justify-center">
-              <Clock className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="border-0 shadow-lg bg-muted">
-        <CardContent className="sm:p-6 p-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Canceled</p>
-              <p className="text-2xl sm:text-3xl font-bold text-muted-foreground">{stats.cancelled}</p>
-            </div>
-            <div className="w-6 h-6 sm:w-12 sm:h-12 bg-muted-foreground rounded-2xl flex items-center justify-center">
-              <DollarSign className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      {widgetConfig.map((widget) => {
+        const Icon = widget.icon;
+        const value = stats[widget.valueKey];
+
+        return (
+          <Card key={widget.key} className={`border border-border/70 ${widget.panelClassName}`}>
+            <CardHeader className="pb-0 sm:pb-2">
+              <div className="flex items-center justify-between gap-2">
+                <CardTitle className="text-lg">{widget.label}</CardTitle>
+                <div className={`flex h-11 w-11 items-center justify-center rounded-full ${widget.iconClassName}`}>
+                  <Icon className="h-[1.125rem] w-[1.125rem]" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-5">
+              <div className="flex min-h-[4] flex-col">
+                <div className="mt-auto">
+                  <p className={`font-display text-[3.6rem] font-black leading-none tracking-[-0.07em] ${widget.valueClassName || "text-foreground"}`}>
+                    {value}
+                  </p>
+                  <p className={`mt-2 text-sm font-medium ${widget.labelClassName || "text-secondary-700/82"}`}>
+                    agreements
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }

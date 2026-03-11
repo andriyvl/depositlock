@@ -7,25 +7,25 @@ import { CheckIcon } from '@/components/ui/check.icon';
 type ToastType = 'success' | 'error' | 'info' | 'warning';
 
 export const showToast = (message: string, type: ToastType) => {
-  const toastColorClass = {
-    success: 'bg-[--success]',
-    error: 'bg-[--error]',
-    info: '',
-    warning: '',
+  const toastClassName = {
+    success: 'border-primary-200 bg-primary-100 text-secondary-900',
+    error: 'border-destructive-200 bg-destructive-100 text-destructive-800',
+    info: 'border-tertiary-200 bg-tertiary-100 text-secondary-800',
+    warning: 'border-accent-200 bg-accent-100 text-accent-800',
   };
 
   const toastIcon = {
     success: <CheckIcon />,
-    error: '',
-    info: '',
-    warning: '',
+    error: null,
+    info: null,
+    warning: null,
   };
 
   toast.custom(() => (
     <div
-      className={`${toastColorClass[type]} inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-[--toast-text]`}
+      className={`${toastClassName[type]} inline-flex w-full items-center justify-center gap-2 rounded-full border px-4 py-3 text-sm font-medium shadow-floating`}
     >
-      <span className="text-sm font-normal">{message}</span>
+      <span>{message}</span>
       {toastIcon[type]}
     </div>
   ));

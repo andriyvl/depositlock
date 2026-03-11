@@ -1,58 +1,61 @@
-// Ensure AppKit is initialized before using hooks
-import { useAppKit, useAppKitAccount, useAppKitProvider, useAppKitState } from '@reown/appkit/react';
-import { ethers } from 'ethers';
-import { getReadonlyProvider } from '../provider/appkit.client';
-import { useState, useEffect, useCallback } from 'react';
-import { NETWORK_CONFIGS, SupportedNetworkIds, normalizeSupportedNetworkId } from '@/lib/model/network.config';
+import { useAppKit, useAppKitAccount, useAppKitProvider, useAppKitState } from "@reown/appkit/react";
+import { ethers } from "ethers";
+import { useCallback, useEffect, useState } from "react";
+import { normalizeSupportedNetworkId, SupportedNetworkIds, NETWORK_CONFIGS } from "@/lib/model/network.config";
+import { getReadonlyProvider } from "../provider/appkit.client";
 
+interface WalletProvider {
+  on?: (event: string, listener: (...args: unknown[]) => void) => void;
+  removeListener?: (event: string, listener: (...args: unknown[]) => void) => void;
+  request?: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
+}
 
 export function useWallet() {
   const { open } = useAppKit();
   const { address, isConnected } = useAppKitAccount();
   const { selectedNetworkId: appKitSelectedNetworkId } = useAppKitState();
-  const { walletProvider } = useAppKitProvider('eip155');
+  const { walletProvider } = useAppKitProvider("eip155");
 
   const [provider, setProvider] = useState<ethers.BrowserProvider | ethers.JsonRpcProvider | undefined>(
-    getReadonlyProvider()
+    getReadonlyProvider(),
   );
-  const [signer, setSigner] = useState<ethers.JsonRpcSigner | undefined>(undefined);
+  const [signer, setSigner] = useState<ethers.JsonRpcSigner | undefined>();
   const [selectedNetworkId, setSelectedNetworkId] = useState<SupportedNetworkIds | undefined>(
-    normalizeSupportedNetworkId(appKitSelectedNetworkId as string | number | null | undefined)
+    normalizeSupportedNetworkId(appKitSelectedNetworkId as string | number | null | undefined),
   );
   const [chainId, setChainId] = useState<number | undefined>(
-    selectedNetworkId ? NETWORK_CONFIGS[selectedNetworkId].id : undefined
+    selectedNetworkId ? NETWORK_CONFIGS[selectedNetworkId].id : undefined,
   );
 
   const syncSelectedNetwork = useCallback(async (): Promise<SupportedNetworkIds | undefined> => {
     const fallbackNetworkId = normalizeSupportedNetworkId(
-      appKitSelectedNetworkId as string | number | null | undefined
+      appKitSelectedNetworkId as string | number | null | undefined,
     );
+    const connectedProvider = walletProvider as WalletProvider | undefined;
 
-    if (!walletProvider) {
+    if (!connectedProvider) {
       setSelectedNetworkId(fallbackNetworkId);
       setChainId(fallbackNetworkId ? NETWORK_CONFIGS[fallbackNetworkId].id : undefined);
       return fallbackNetworkId;
     }
 
     try {
-      const requestedChainId = await (walletProvider as any).request?.({ method: 'eth_chainId' });
+      const requestedChainId = await connectedProvider.request?.({ method: "eth_chainId" });
       const resolvedNetworkId = normalizeSupportedNetworkId(
-        requestedChainId ?? (appKitSelectedNetworkId as string | number | null | undefined)
+        requestedChainId as string | number | null | undefined,
       );
 
       setSelectedNetworkId(resolvedNetworkId);
       setChainId(resolvedNetworkId ? NETWORK_CONFIGS[resolvedNetworkId].id : undefined);
-
       return resolvedNetworkId;
     } catch {
       try {
-        const browserProvider = new ethers.BrowserProvider(walletProvider as any);
+        const browserProvider = new ethers.BrowserProvider(walletProvider as ethers.Eip1193Provider);
         const network = await browserProvider.getNetwork();
         const resolvedNetworkId = normalizeSupportedNetworkId(Number(network.chainId));
 
         setSelectedNetworkId(resolvedNetworkId);
         setChainId(resolvedNetworkId ? NETWORK_CONFIGS[resolvedNetworkId].id : undefined);
-
         return resolvedNetworkId;
       } catch {
         setSelectedNetworkId(fallbackNetworkId);
@@ -64,13 +67,14 @@ export function useWallet() {
 
   useEffect(() => {
     if (walletProvider) {
-      const newProvider = new ethers.BrowserProvider(walletProvider as any);
-      setProvider(newProvider);
-      newProvider.getSigner().then(setSigner).catch(() => setSigner(undefined));
-    } else {
-      setProvider(getReadonlyProvider());
-      setSigner(undefined);
+      const nextProvider = new ethers.BrowserProvider(walletProvider as ethers.Eip1193Provider);
+      setProvider(nextProvider);
+      nextProvider.getSigner().then(setSigner).catch(() => setSigner(undefined));
+      return;
     }
+
+    setProvider(getReadonlyProvider());
+    setSigner(undefined);
   }, [walletProvider]);
 
   useEffect(() => {
@@ -78,12 +82,9 @@ export function useWallet() {
   }, [syncSelectedNetwork]);
 
   useEffect(() => {
-    const chainAwareProvider = walletProvider as {
-      on?: (event: string, listener: (...args: unknown[]) => void) => void;
-      removeListener?: (event: string, listener: (...args: unknown[]) => void) => void;
-    } | undefined;
+    const connectedProvider = walletProvider as WalletProvider | undefined;
 
-    if (!chainAwareProvider?.on) {
+    if (!connectedProvider?.on) {
       return;
     }
 
@@ -91,18 +92,20 @@ export function useWallet() {
       void syncSelectedNetwork();
     };
 
-    chainAwareProvider.on('chainChanged', handleChainChanged);
+    connectedProvider.on("chainChanged", handleChainChanged);
 
     return () => {
-      chainAwareProvider.removeListener?.('chainChanged', handleChainChanged);
+      connectedProvider.removeListener?.("chainChanged", handleChainChanged);
     };
   }, [syncSelectedNetwork, walletProvider]);
 
   const getAddress = useCallback(async () => {
     try {
-      const s = signer;
-      if (!s) return undefined;
-      return await s.getAddress();
+      if (!signer) {
+        return undefined;
+      }
+
+      return await signer.getAddress();
     } catch {
       return undefined;
     }
@@ -110,57 +113,79 @@ export function useWallet() {
 
   const ensureNetwork = useCallback(async (networkId: SupportedNetworkIds): Promise<boolean> => {
     try {
-      if (!walletProvider) return true; // read-only
-      if (selectedNetworkId === networkId) return true;
+      const connectedProvider = walletProvider as WalletProvider | undefined;
+
+      if (!connectedProvider) {
+        return true;
+      }
+
+      if (selectedNetworkId === networkId) {
+        return true;
+      }
 
       const chainConfig = NETWORK_CONFIGS[networkId];
       if (!chainConfig) {
         throw new Error(`Unsupported network: ${networkId}`);
       }
 
-      await (walletProvider as any).request?.({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: `0x${chainConfig.id.toString(16)}` }]
+      await connectedProvider.request?.({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: `0x${chainConfig.id.toString(16)}` }],
       });
       await syncSelectedNetwork();
       return true;
-    } catch (switchError: any) {
-      if (switchError?.code !== 4902) {
+    } catch (switchError) {
+      const errorCode =
+        typeof switchError === "object" &&
+        switchError !== null &&
+        "code" in switchError &&
+        typeof switchError.code === "number"
+          ? switchError.code
+          : undefined;
+
+      if (errorCode !== 4902) {
         return false;
       }
 
       try {
+        const connectedProvider = walletProvider as WalletProvider | undefined;
         const chainConfig = NETWORK_CONFIGS[networkId];
-        if (!chainConfig) return false;
+
+        if (!connectedProvider || !chainConfig) {
+          return false;
+        }
 
         const rpcUrls = chainConfig.rpcUrls?.default?.http || [];
         const explorerUrl = chainConfig.blockExplorers?.default?.url;
-        if (!rpcUrls.length) return false;
 
-        await (walletProvider as any).request?.({
-          method: 'wallet_addEthereumChain',
-          params: [{
-            chainId: `0x${chainConfig.id.toString(16)}`,
-            chainName: chainConfig.name,
-            nativeCurrency: chainConfig.nativeCurrency,
-            rpcUrls,
-            ...(explorerUrl ? { blockExplorerUrls: [explorerUrl] } : {}),
-          }]
+        if (!rpcUrls.length) {
+          return false;
+        }
+
+        await connectedProvider.request?.({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: `0x${chainConfig.id.toString(16)}`,
+              chainName: chainConfig.name,
+              nativeCurrency: chainConfig.nativeCurrency,
+              rpcUrls,
+              ...(explorerUrl ? { blockExplorerUrls: [explorerUrl] } : {}),
+            },
+          ],
         });
         await syncSelectedNetwork();
         return true;
       } catch (addError) {
-        // eslint-disable-next-line no-console
-        console.error(`Failed to add/switch network ${networkId}`, addError);
+        console.error(`Failed to add or switch network ${networkId}`, addError);
         return false;
       }
     }
-  }, [walletProvider, selectedNetworkId, syncSelectedNetwork]);
+  }, [selectedNetworkId, syncSelectedNetwork, walletProvider]);
 
   async function connectWallet() {
     await open();
   }
-
 
   return {
     open,
@@ -172,6 +197,6 @@ export function useWallet() {
     getSigner: () => signer,
     getAddress,
     selectedNetworkId,
-    ensureNetwork
+    ensureNetwork,
   };
 }

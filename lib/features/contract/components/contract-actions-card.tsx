@@ -10,9 +10,9 @@ export const ContractActionsCard = ({ agreement, contractId }: { agreement: Agre
     return (
         <>
             {auth.isAuthenticated && agreement &&
-                <Card className="shadow-lg border-0 bg-background/80 backdrop-blur-sm">
+                <Card className="bg-white/86">
                     <CardHeader>
-                        <CardTitle className="text-lg">Contract Actions</CardTitle>
+                        <CardTitle className="text-3xl">Contract actions</CardTitle>
                         <CardDescription>
                             Available actions based on your role and contract status
                         </CardDescription>

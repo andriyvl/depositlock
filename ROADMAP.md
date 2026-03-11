@@ -14,3 +14,7 @@
 - [x] Create a Contact page
 
 - [ ] Redesign the website. Use best design practices. Make the website more appealing
+  - [ ] Upgrade Tailwind to v4 and stabilize the build
+  - [ ] Refactor theme variables and shared styling primitives
+  - [ ] Redesign all public pages and homepage content
+  - [ ] Restyle app flows without changing product functionality

@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "app/**/*",
+    "lib-shared/**/*",
+    "lib/**/*",
+    "next-env.d.ts",
+    "supabase"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "server",
+    ".next"
+  ]
+}

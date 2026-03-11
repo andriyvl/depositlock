@@ -1,72 +1,65 @@
 :host, :root {
-    /* !!!DONT USE YET!!! BASE COLORS */
-    --color-0: #fff;
-    --color-1: #cdcdcd;
-    --color-2: #999999;
-    --color-3: #bbbebf;
-    --color-4: #646464;
-    --color-5: #4f4f4f;
-    --color-6: #34363d;
-    --color-7: #22242b;
-    --color-8: #1b1d20;
-    --color-9: #161719;
+    --color-0: #ffffff;
+    --color-1: #f4f7ec;
+    --color-2: #e4e8dc;
+    --color-3: #cfd5c4;
+    --color-4: #9fa89a;
+    --color-5: #6f786c;
+    --color-6: #455041;
+    --color-7: #283024;
+    --color-8: #182014;
+    --color-9: #0f150d;
 
-    /* TEMP GRAY SHADES */
-    /* TODO: refactor to use --color-0 - --color-9 after confirmed with designers */
-    --white-grey: #F9F9FF;
-    --light-grey: #f3f3f3;
-    --odd-gray: #d5d5d5;
-    --light-fog-grey: #EEEEF9;
-    --light-soft-fog-grey: #F5F5F7;
-    --fog-grey: #D9DEEA;
-    --fog-soft-grey: #EEF0F6;
-    --ash-grey: #9A9FA8;
-    --ash-soft-grey: #D6D6D6;
-    --metal-grey: #8496B0;
-    --stone-grey: #797583;
-    --gun-powder-grey: #42445A;
-    --silver-grey: #DEDEE3;
+    --white-grey: #fbfcf7;
+    --light-grey: #eef2e6;
+    --odd-gray: #d6dccd;
+    --light-fog-grey: #f1f5e9;
+    --light-soft-fog-grey: #f7f9f3;
+    --fog-grey: #dbe1d0;
+    --fog-soft-grey: #eef2e8;
+    --ash-grey: #95a08c;
+    --ash-soft-grey: #d8ddd3;
+    --metal-grey: #768370;
+    --stone-grey: #5f6a58;
+    --gun-powder-grey: #121810;
+    --silver-grey: #e5e7de;
 
-    /* COLORS */
-    /* REUSABLE COLORS*/
-    --deep-red: #B51B1B;        
-    --faded-red: #B51B1B1A;      
-    --alert-red: #C61E1E;     
-    --hot-orange: #F95021;
-    --bright-orange: #ff9f45;
-    --golden-yellow: #FBBC05;
-    --deep-yellow: #FFC53D;
-    --pale-yellow: #FFF7B2;
-    --turquoise-1: #44C6A0;
-    --emerald-green: #34A180;
-    --bright-red: #EB3048;
-    --mid-blue: #3B59CE;
-    --vivid-violet: #7751FE;
-    --green-peach: #6cbc69;
-    --mid-ripe-peach: #b8c342;
+    --deep-red: #bb474a;
+    --faded-red: #bb474a1a;
+    --alert-red: #d14d53;
+    --hot-orange: #f06a38;
+    --bright-orange: #ff9a63;
+    --golden-yellow: #9fe870;
+    --deep-yellow: #c7ef75;
+    --pale-yellow: #eef7c4;
+    --turquoise-1: #64d2de;
+    --emerald-green: #1f6f53;
+    --bright-red: #e45d63;
+    --mid-blue: #16331c;
+    --vivid-violet: #86b7ff;
+    --green-peach: #78bf78;
+    --mid-ripe-peach: #abc54f;
 
-    /* OPACE COLORS (RGBA format) */
     --invisible: rgba(0, 0, 0, 0);
-    --grey-opace-01: rgba(0, 0, 0, 0.1);
-    --grey-opace-80: rgba(213, 215, 221, 0.8);
-    --white-opace-02: rgba(255, 255, 255, 0.20);
-    --white-opace-70: rgba(255, 255, 255, 0.70);
-    --violet-opace-32: rgba(71, 99, 209, 0.32);
-    --green-peach-opace-70: rgba(143, 195, 66, 0.7);
-    --violet-opace-72: rgba(237, 240, 255, 0.72);
-    --deep-red-opace-10: rgba(181, 27, 27, 0.1);
-    --emerald-green-opace-10: rgba(68, 198, 160, 0.1);
+    --grey-opace-01: rgba(18, 24, 16, 0.1);
+    --grey-opace-80: rgba(214, 220, 205, 0.8);
+    --white-opace-02: rgba(255, 255, 255, 0.2);
+    --white-opace-70: rgba(255, 255, 255, 0.7);
+    --violet-opace-32: rgba(100, 210, 222, 0.24);
+    --green-peach-opace-70: rgba(159, 232, 112, 0.7);
+    --violet-opace-72: rgba(239, 249, 255, 0.72);
+    --deep-red-opace-10: rgba(187, 71, 74, 0.1);
+    --emerald-green-opace-10: rgba(31, 111, 83, 0.1);
 
     /* STATE COLORS */
-    --success: var(--turquoise-1);
+    --success: #1b8f63;
     --error: var(--bright-red);
     --warning: var(--deep-yellow);
-    --info: var(--mid-blue);
+    --info: var(--turquoise-1);
     --inactive: var(--ash-grey);
-    --progress: var(--mid-blue);
+    --progress: var(--turquoise-1);
 
-    /* BRAND COLORS */
-    --primary: var(--mid-blue);
+    --primary: var(--golden-yellow);
     --primary-hover: var(--primary);
     --primary-active: var(--primary);
     --primary-focus: var(--primary);
@@ -74,12 +67,12 @@
     --primary-border: var(--invisible);
     --primary-border-hover: var(--primary-border);
     --primary-shadow: var(--ash-grey);
-    --primary-foreground: var(--color-0);
+    --primary-foreground: var(--gun-powder-grey);
     --primary-foreground-hover: var(--primary-foreground);
     --primary-gradient-1: var(--primary);
     --primary-gradient-2: var(--primary);
 
-    --secondary: var(--golden-yellow);
+    --secondary: var(--mid-blue);
     --secondary-hover: var(--secondary);
     --secondary-active: var(--secondary);
     --secondary-focus: var(--secondary);
@@ -87,7 +80,7 @@
     --secondary-border: var(--invisible);
     --secondary-border-hover: var(--secondary-border);
     --secondary-shadow: var(--ash-grey);
-    --secondary-foreground: var(--gun-powder-grey);
+    --secondary-foreground: var(--color-0);
     --secondary-foreground-hover: var(--secondary-foreground);
     --secondary-gradient-1: var(--secondary);
     --secondary-gradient-2: var(--secondary);
@@ -105,9 +98,9 @@
     --tertiary-gradient-1: var(--tertiary);
     --tertiary-gradient-2: var(--tertiary);
 
-    --accent: var(--mid-blue);
-    --accent-hover: var(--mid-blue);
-    --accent-active: var(--mid-blue);
+    --accent: var(--hot-orange);
+    --accent-hover: var(--hot-orange);
+    --accent-active: var(--hot-orange);
     --accent-disabled: var(--tertiary);
     --accent-border: var(--invisible);
     --accent-shadow: var(--ash-grey);

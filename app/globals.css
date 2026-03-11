@@ -1,8 +1,8 @@
-@import '@/styles/tailwind.utils.css';
-@import '@/styles/animations.css';
-@import '@/styles/cards.css';
-@import '@/styles/scrolbar.css';
-@import '@/styles/text.css';
-@import '@/styles/inputs.css';
-@import "@/styles/deposit-lock-theme.css";
-@import "@/styles/gradient.css";
+@import "../lib/styles/tailwind.utils.css";
+@import "../lib/styles/deposit-lock-theme.css";
+@import "../lib/styles/animations.css";
+@import "../lib/styles/cards.css";
+@import "../lib/styles/scrolbar.css";
+@import "../lib/styles/text.css";
+@import "../lib/styles/inputs.css";
+@import "../lib/styles/gradient.css";

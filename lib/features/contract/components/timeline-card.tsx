@@ -5,13 +5,13 @@ import { formatDate } from "@/lib/helpers/date.helpers";
 
 export function TimelineCard({ agreement }: { agreement: Agreement }) {
   return (
-    <Card className="shadow-lg border-0 bg-background/80 backdrop-blur-sm">
+    <Card className="bg-white/86">
       <CardHeader>
-        <CardTitle className="text-lg">Timeline</CardTitle>
+        <CardTitle className="text-3xl">Timeline</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-5">
         <div className="flex items-start space-x-3">
-          <div className="w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center flex-shrink-0">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <CheckCircle className="w-3 h-3 text-white" />
           </div>
           <div>
@@ -22,7 +22,7 @@ export function TimelineCard({ agreement }: { agreement: Agreement }) {
           </div>
         </div>
         <div className="flex items-start space-x-3">
-          <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${agreement.filledAt ? 'bg-tertiary-500' : 'bg-muted border-2 border-muted-foreground'
+          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${agreement.filledAt ? 'bg-tertiary-500 text-white' : 'bg-muted border-2 border-muted-foreground'
             }`}>
             {agreement.filledAt ? (
               <CheckCircle className="w-3 h-3 text-white" />
@@ -40,7 +40,7 @@ export function TimelineCard({ agreement }: { agreement: Agreement }) {
 
         {agreement.disputedAt && (
           <div className="flex items-start space-x-3">
-            <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 bg-accent-500">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-500">
               <CheckCircle className="w-3 h-3 text-white" />
             </div>
             <div>
@@ -53,7 +53,7 @@ export function TimelineCard({ agreement }: { agreement: Agreement }) {
         )}
 
         <div className="flex items-start space-x-3">
-          <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${agreement.releasedAt ? 'bg-secondary-500' : 'bg-muted border-2 border-muted-foreground'
+          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${agreement.releasedAt ? 'bg-secondary-500 text-white' : 'bg-muted border-2 border-muted-foreground'
             }`}>
             {agreement.releasedAt ? (
               <CheckCircle className="w-3 h-3 text-white" />
@@ -72,7 +72,7 @@ export function TimelineCard({ agreement }: { agreement: Agreement }) {
 
         {agreement.canceledAt && (
           <div className="flex items-start space-x-3">
-            <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${agreement.canceledAt ? 'bg-muted-500' : 'bg-muted border-2 border-muted-foreground'
+            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${agreement.canceledAt ? 'bg-muted-500 text-white' : 'bg-muted border-2 border-muted-foreground'
               }`}>
               {agreement.canceledAt ? (
                 <CheckCircle className="w-3 h-3 text-white" />
