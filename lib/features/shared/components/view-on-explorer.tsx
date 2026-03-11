@@ -7,14 +7,14 @@ import { ExternalLink } from "lucide-react";
 interface ViewOnExplorerProps {
   contractAddress: string;
   networkId?: SupportedNetworkIds;
-  variant?: "default" | "outline" | "secondary" | "ghost" | "link" | "destructive";
+  variant?: "default" | "outline" | "secondary" | "ghost" | "link" | "destructive" | "tertiary";
   className?: string;
   children?: React.ReactNode;
 }
 
 export function ViewOnExplorer({ 
   contractAddress, 
-  networkId = SupportedNetworkIds.polygonAmoy,
+  networkId = SupportedNetworkIds.polygon,
   variant = "outline",
   className = "w-full justify-start",
   children 

@@ -6,7 +6,7 @@ import { copyWalletAddress } from "@/lib/helpers/contract.helpers";
 import { AgreementStatus } from "@/lib/model/agreement.types";
 import { getNetworkDisplayName, SupportedNetworkIds } from "@/lib/model/network.config";
 
-export type BadgeType = 
+export type BadgeType =
   | "address"
   | "creator"
   | "depositor"
@@ -38,8 +38,8 @@ const badgeConfig: Record<BadgeType, BadgeConfig> = {
     getTooltip: (value: string, value2?: string) => (
       <div className="sm:w-full w-fit">
         <p className="text-xs text-muted-foreground">Your wallet address:</p>
-        <p className="text-foreground text-sm">{value}</p>  
-        <p className="text-xs text-muted-foreground">Network: <span className="font-mono text-sm">{getNetworkDisplayName(value2 as SupportedNetworkIds)}</span></p>
+        <p className="text-foreground text-sm">{value}</p>
+        <p className="text-xs text-muted-foreground">Current network: <span className="font-mono text-sm">{getNetworkDisplayName(value2 as SupportedNetworkIds)}</span></p>
         <p className="text-xs text-foreground mt-1 text-right">Click to copy</p>
       </div>
     ),
@@ -96,7 +96,7 @@ const badgeConfig: Record<BadgeType, BadgeConfig> = {
 
 export function UnifiedBadge({ type, value = "", value2 = "", size = "s", className, onClick, children }: UnifiedBadgeProps) {
   const config = badgeConfig[type];
-  
+
   const handleClick = () => {
     if (onClick) {
       onClick();
@@ -109,7 +109,7 @@ export function UnifiedBadge({ type, value = "", value2 = "", size = "s", classN
     <Badge
       variant={config.variant}
       size={size}
-      className={`cursor-pointer hover:opacity-80 transition-opacity ${className || ""}}`}
+      className={`cursor-pointer hover:opacity-80 ${className || ""}`}
       onClick={handleClick}
     >
       {children}

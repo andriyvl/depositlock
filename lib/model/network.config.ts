@@ -1,4 +1,4 @@
-import { polygonAmoy, polygon, mainnet, arbitrum, Assign, Chain } from '@reown/appkit/networks';
+import { polygonAmoy, polygon, mainnet, arbitrum, optimism, base, mantle, Assign, Chain } from '@reown/appkit/networks';
 
 export enum ChainNamespace {
   EVM = 'eip155',
@@ -10,6 +10,9 @@ export enum ChainNamespace {
 export enum EthereumChainId {
   polygonAmoy = 80002,
   polygon = 137,
+  optimism = 10,
+  base = 8453,
+  mantle = 5000,
   ethereum = 1,
   arbitrum = 42161,
 }
@@ -19,7 +22,8 @@ export interface AppNetworkConfig extends Assign<Chain<undefined>, Chain> {
   supportedTokens: Array<{
     symbol: string;
     name: string;
-    address?: string;
+    address: string;
+    decimals: number;
   }>;
 }
 
@@ -27,6 +31,9 @@ export interface AppNetworkConfig extends Assign<Chain<undefined>, Chain> {
 export enum SupportedNetworkIds {
   polygonAmoy = `${ChainNamespace.EVM}:${EthereumChainId.polygonAmoy}`,
   polygon = `${ChainNamespace.EVM}:${EthereumChainId.polygon}`,
+  optimism = `${ChainNamespace.EVM}:${EthereumChainId.optimism}`,
+  base = `${ChainNamespace.EVM}:${EthereumChainId.base}`,
+  mantle = `${ChainNamespace.EVM}:${EthereumChainId.mantle}`,
   ethereum = `${ChainNamespace.EVM}:${EthereumChainId.ethereum}`,
   arbitrum = `${ChainNamespace.EVM}:${EthereumChainId.arbitrum}`,
 }
@@ -36,42 +43,95 @@ const APP_NETWORK_CONFIG: Record<SupportedNetworkIds, Partial<AppNetworkConfig>>
     displayName: 'Polygon Amoy Testnet',
     supportedTokens: [
       {
-        symbol: 'POL',
-        name: 'Polygon',
-      },
-      {
         symbol: 'USDC',
         name: 'USD Coin',
         address: '0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582',
+        decimals: 6,
       },
       {
         symbol: 'USDT',
         name: 'Tether USD',
         address: '0xA02f6adc7926efeBBd59Fd43A84f4E0c0c91e832',
+        decimals: 6,
       },
     ],
   },
   [SupportedNetworkIds.polygon]: {
-    displayName: 'Polygon (Recommended - Low Fees)',
+    displayName: 'Polygon Mainnet (Production)',
     supportedTokens: [
-      {
-        symbol: 'MATIC',
-        name: 'Polygon',
-      },
       {
         symbol: 'USDC',
         name: 'USD Coin',
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+        address: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
+        decimals: 6,
       },
       {
         symbol: 'USDT',
         name: 'Tether USD',
-        address: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
+        address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+        decimals: 6,
+      },
+    ],
+  },
+  [SupportedNetworkIds.arbitrum]: {
+    displayName: 'Arbitrum One',
+    supportedTokens: [
+      {
+        symbol: 'USDC',
+        name: 'USD Coin',
+        address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+        decimals: 6,
       },
       {
-        symbol: 'DAI',
-        name: 'Dai Stablecoin',
-        address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+        symbol: 'USDT',
+        name: 'Tether USD',
+        address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+        decimals: 6,
+      },
+    ],
+  },
+  [SupportedNetworkIds.optimism]: {
+    displayName: 'Optimism',
+    supportedTokens: [
+      {
+        symbol: 'USDC',
+        name: 'USD Coin',
+        address: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
+        decimals: 6,
+      },
+      {
+        symbol: 'USDT',
+        name: 'Tether USD',
+        address: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
+        decimals: 6,
+      },
+    ],
+  },
+  [SupportedNetworkIds.base]: {
+    displayName: 'Base',
+    supportedTokens: [
+      {
+        symbol: 'USDC',
+        name: 'USD Coin',
+        address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+        decimals: 6,
+      },
+      {
+        symbol: 'USDT',
+        name: 'Tether USD',
+        address: '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2',
+        decimals: 6,
+      },
+    ],
+  },
+  [SupportedNetworkIds.mantle]: {
+    displayName: 'Mantle',
+    supportedTokens: [
+      {
+        symbol: 'USDC',
+        name: 'USD Coin',
+        address: '0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9',
+        decimals: 6,
       },
     ],
   },
@@ -79,47 +139,16 @@ const APP_NETWORK_CONFIG: Record<SupportedNetworkIds, Partial<AppNetworkConfig>>
     displayName: 'Ethereum (Higher Fees)',
     supportedTokens: [
       {
-        symbol: 'ETH',
-        name: 'Ether',
-      },
-      {
         symbol: 'USDC',
         name: 'USD Coin',
-        address: '0xa0b86a33e6d3d0b79c6930b5a95f6c21a4d4e5e3',
+        address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+        decimals: 6,
       },
       {
         symbol: 'USDT',
         name: 'Tether USD',
-        address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-      },
-      {
-        symbol: 'DAI',
-        name: 'Dai Stablecoin',
-        address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-      },
-    ],
-  },
-  [SupportedNetworkIds.arbitrum]: {
-    displayName: 'Arbitrum (Low Fees)',
-    supportedTokens: [
-      {
-        symbol: 'ETH',
-        name: 'Ether',
-      },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        address: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8',
-      },
-      {
-        symbol: 'USDT',
-        name: 'Tether USD',
-        address: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
-      },
-      {
-        symbol: 'DAI',
-        name: 'Dai Stablecoin',
-        address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
+        address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+        decimals: 6,
       },
     ],
   },
@@ -129,8 +158,11 @@ const APP_NETWORK_CONFIG: Record<SupportedNetworkIds, Partial<AppNetworkConfig>>
 const BASE_CONFIGS = {
   [SupportedNetworkIds.polygonAmoy]: polygonAmoy,
   [SupportedNetworkIds.polygon]: polygon,
-  [SupportedNetworkIds.ethereum]: mainnet,
   [SupportedNetworkIds.arbitrum]: arbitrum,
+  [SupportedNetworkIds.optimism]: optimism,
+  [SupportedNetworkIds.base]: base,
+  [SupportedNetworkIds.mantle]: mantle,
+  [SupportedNetworkIds.ethereum]: mainnet,
 };
 
 
@@ -148,6 +180,15 @@ export const NETWORK_CONFIGS: Record<SupportedNetworkIds, AppNetworkConfig> = Ob
   return acc;
 }, {} as Record<SupportedNetworkIds, AppNetworkConfig>);
 
+export const DEPLOYMENT_NETWORKS: SupportedNetworkIds[] = [
+  SupportedNetworkIds.polygon,
+  SupportedNetworkIds.arbitrum,
+  SupportedNetworkIds.optimism,
+  SupportedNetworkIds.base,
+  SupportedNetworkIds.mantle,
+  SupportedNetworkIds.ethereum,
+];
+
 
 export function getNetworkConfig(networkId: SupportedNetworkIds): AppNetworkConfig | undefined {
   return NETWORK_CONFIGS[networkId];
@@ -155,7 +196,45 @@ export function getNetworkConfig(networkId: SupportedNetworkIds): AppNetworkConf
 
 export function getSupportedCurrencies(networkId: SupportedNetworkIds): Array<{ symbol: string; name: string }> {
   const config = getNetworkConfig(networkId);
-  return config?.supportedTokens || [];
+  return (config?.supportedTokens || []).map(({ symbol, name }) => ({ symbol, name }));
+}
+
+export function getTokenConfig(
+  networkId: SupportedNetworkIds,
+  symbol: string
+): { symbol: string; name: string; address: string; decimals: number } | undefined {
+  const config = getNetworkConfig(networkId);
+  if (!config) return undefined;
+
+  return config.supportedTokens.find((token) => token.symbol === symbol);
+}
+
+export function getSupportedNetworkIdFromChainId(chainId: number): SupportedNetworkIds | undefined {
+  const entry = Object.entries(NETWORK_CONFIGS).find(([, config]) => config.id === chainId);
+  return entry?.[0] as SupportedNetworkIds | undefined;
+}
+
+export function normalizeSupportedNetworkId(
+  value: string | number | null | undefined
+): SupportedNetworkIds | undefined {
+  if (value === null || value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value === 'number') {
+    return getSupportedNetworkIdFromChainId(value);
+  }
+
+  if (Object.hasOwn(NETWORK_CONFIGS, value)) {
+    return value as SupportedNetworkIds;
+  }
+
+  const parsedChainId = Number.parseInt(value, value.startsWith('0x') ? 16 : 10);
+  if (!Number.isFinite(parsedChainId)) {
+    return undefined;
+  }
+
+  return getSupportedNetworkIdFromChainId(parsedChainId);
 }
 
 export function getNetworkDisplayName(networkId: SupportedNetworkIds): string {
@@ -163,20 +242,34 @@ export function getNetworkDisplayName(networkId: SupportedNetworkIds): string {
   return config?.displayName || networkId;
 }
 
+export function getNetworkIconSrc(networkId: SupportedNetworkIds): string {
+  switch (networkId) {
+    case SupportedNetworkIds.ethereum:
+      return '/networks/ethereum.svg';
+    case SupportedNetworkIds.arbitrum:
+      return '/networks/arbitrum.svg';
+    case SupportedNetworkIds.base:
+      return '/networks/base.svg';
+    case SupportedNetworkIds.optimism:
+      return '/networks/optimism.svg';
+    case SupportedNetworkIds.polygon:
+    case SupportedNetworkIds.polygonAmoy:
+      return '/networks/polygon.svg';
+    case SupportedNetworkIds.mantle:
+      return '/networks/mantle.svg';
+    default:
+      return '/networks/ethereum.svg';
+  }
+}
+
 export function getDefaultCurrency(networkId: SupportedNetworkIds): string {
   const config = getNetworkConfig(networkId);
   if (!config) return 'USDC';
-  
-  // For testnets, prefer native currency
-  if (config.testnet) {
-    return config.nativeCurrency.symbol;
-  }
-  
-  // For mainnet, prefer stablecoins
+
   const stablecoins = ['USDC', 'USDT', 'DAI'];
-  const availableStablecoin = config.supportedTokens.find(token => 
+  const availableStablecoin = config.supportedTokens.find((token) =>
     stablecoins.includes(token.symbol)
   );
-  
-  return availableStablecoin?.symbol || config.nativeCurrency.symbol;
+
+  return availableStablecoin?.symbol || config.supportedTokens[0]?.symbol || 'USDC';
 }

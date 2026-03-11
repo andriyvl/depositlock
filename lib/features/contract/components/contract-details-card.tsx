@@ -1,132 +1,171 @@
 "use client";
 
-import {
-    Lock, Clock, AlertCircle,
-    Network, Globe
-  } from "lucide-react";
+import Image from "next/image";
+import { AlertCircle, Clock3, Copy, Lock, Network } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/lib/components/ui/card";
-import { Separator } from "@/lib/components/ui/separator";
-import { getNetworkDisplayName, SupportedNetworkIds } from "@/lib/model/network.config";
+import { getNetworkDisplayName, getNetworkIconSrc, SupportedNetworkIds } from "@/lib/model/network.config";
 import { BadgeType, UnifiedBadge } from "@/lib/features/shared";
 import { Agreement, AgreementStatus } from "@/lib/model/agreement.types";
 import { copyAddressToClipboard, isZeroAddress } from "../../../helpers/contract.helpers";
 
 interface ContractDetailsCardProps {
-    agreement: Agreement;
+  agreement: Agreement;
 }
 
 export function ContractDetailsCard({ agreement }: ContractDetailsCardProps) {
-    const isDepositor = agreement.depositor && !isZeroAddress(agreement.depositor);
+  const isDepositor = agreement.depositor && !isZeroAddress(agreement.depositor);
+  const networkId = agreement.networkId as SupportedNetworkIds;
+  const networkIconSrc = getNetworkIconSrc(networkId);
 
-    return (
-        <Card className="shadow-lg border-0 bg-background/80 backdrop-blur-sm">
-            <CardHeader>
-                <div className="flex items-start justify-between">
-                    <CardTitle className="text-2xl">{agreement.title}</CardTitle>
-                    <UnifiedBadge type={`status-${agreement.status}` as BadgeType} />
+  return (
+    <Card className="bg-white/86">
+      <CardHeader>
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.05em] text-secondary-700">
+              Contract workspace
+            </p>
+            <CardTitle className="mt-3 text-4xl">{agreement.title}</CardTitle>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <UnifiedBadge type={`status-${agreement.status}` as BadgeType} size="m" />
+            <UnifiedBadge type={agreement.role} size="m" />
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="rounded-[1.75rem] border border-primary-200 bg-primary-50/90 p-5">
+            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-secondary-700">Amount</div>
+            <div className="mt-3 font-display text-4xl tracking-[-0.05em] text-foreground">
+              {agreement.amount} {agreement.currency}
+            </div>
+            <div className="mt-2 text-sm font-medium text-secondary-800">Deposit amount</div>
+          </div>
+
+          <div className="rounded-[1.75rem] border border-tertiary-200 bg-tertiary-50/90 p-5">
+            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-secondary-700">Funding</div>
+            <div className="mt-3 font-display text-4xl tracking-[-0.05em] text-foreground">
+              {agreement.filledAt ? (
+                `${agreement.amount} ${agreement.currency}`
+              ) : (
+                <Clock3 className="h-8 w-8" />
+              )}
+            </div>
+            <div className="mt-2 text-sm font-medium text-secondary-800">
+              {agreement.filledAt ? "Filled amount" : "To be filled"}
+            </div>
+          </div>
+
+          {agreement.status === AgreementStatus.released && (
+            <div className="rounded-[1.75rem] border border-secondary-200 bg-secondary-50/90 p-5">
+              <div className="text-xs font-semibold uppercase tracking-[0.12em] text-secondary-700">Release</div>
+              <div className="mt-3 font-display text-4xl tracking-[-0.05em] text-foreground">
+                {agreement.releasedAt ? (
+                  `${agreement.releasedAmount} ${agreement.currency}`
+                ) : (
+                  <Clock3 className="h-8 w-8" />
+                )}
+              </div>
+              <div className="mt-2 text-sm font-medium text-secondary-800">
+                {agreement.releasedAt ? "Released amount" : "To be released"}
+              </div>
+            </div>
+          )}
+
+          {agreement.status === AgreementStatus.disputed && (
+            <div className="rounded-[1.75rem] border border-accent-200 bg-accent-50/90 p-5">
+              <div className="text-xs font-semibold uppercase tracking-[0.12em] text-secondary-700">Dispute</div>
+              <div className="mt-3 font-display text-4xl tracking-[-0.05em] text-foreground">
+                {agreement.proposedAmount} {agreement.currency}
+              </div>
+              <div className="mt-2 text-sm font-medium text-secondary-800">Proposed release amount</div>
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-4">
+          <h4 className="flex items-center font-semibold text-foreground">
+            <Lock className="mr-2 h-4 w-4" />
+            Agreement details
+          </h4>
+
+          <div className="rounded-[1.6rem] border border-border/60 bg-white/74 p-5">
+            <span className="text-sm text-muted-foreground">Description</span>
+            <div className="mt-3 text-base font-medium leading-7 text-foreground">{agreement.description}</div>
+          </div>
+
+          {agreement.disputeReason && (
+            <div className="rounded-[1.6rem] border border-accent-200 bg-accent-50/80 p-5">
+              <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                <AlertCircle className="h-4 w-4 text-accent-500" />
+                Dispute reason
+              </span>
+              <div className="mt-3 text-base font-medium leading-7 text-foreground">{agreement.disputeReason}</div>
+            </div>
+          )}
+
+          <h4 className="flex items-center font-semibold text-foreground">
+            <Network className="mr-1 h-4 w-4" />
+            Contract information
+          </h4>
+
+          <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
+            <div className="rounded-[1.6rem] border border-border/60 bg-white/74 p-5">
+              <span className="block text-sm text-muted-foreground">Network</span>
+              <div className="mt-3 inline-flex items-center gap-3 rounded-full bg-white py-3">
+                <span className="font-medium text-foreground">{getNetworkDisplayName(networkId)}</span>
+                <Image
+                  src={networkIconSrc}
+                  alt={`${getNetworkDisplayName(networkId)} icon`}
+                  width={20}
+                  height={20}
+                  className="h-5 w-5 rounded-full"
+                />
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => copyAddressToClipboard(agreement.contractAddress, "Contract Address")}
+              className="rounded-[1.6rem] border border-border/60 bg-white/74 p-5 text-left transition-colors hover:border-secondary-200 hover:bg-white"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-sm text-muted-foreground">Contract address</span>
+                <Copy className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="mt-3 break-all font-mono text-sm leading-7 text-foreground">{agreement.contractAddress}</div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => copyAddressToClipboard(agreement.creator, "Creator Address")}
+              className="rounded-[1.6rem] border border-border/60 bg-white/74 p-5 text-left transition-colors hover:border-secondary-200 hover:bg-white"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-sm text-muted-foreground">Creator address</span>
+                <Copy className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="mt-3 break-all font-mono text-sm leading-7 text-foreground">{agreement.creator}</div>
+            </button>
+
+            {isDepositor && (
+              <button
+                type="button"
+                onClick={() => copyAddressToClipboard(agreement.depositor, "Depositor Address")}
+                className="rounded-[1.6rem] border border-border/60 bg-white/74 p-5 text-left transition-colors hover:border-secondary-200 hover:bg-white"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm text-muted-foreground">Depositor address</span>
+                  <Copy className="h-4 w-4 text-muted-foreground" />
                 </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Deposit Amount */}
-                    <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-primary-700">
-                            {agreement.amount} {agreement.currency}
-                        </div>
-                        <div className="text-sm text-primary-600">Deposit Amount</div>
-                    </div>
-                    {/* Filled Amount */}
-                    <div className="bg-tertiary-50 border border-tertiary-200 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-tertiary-700">
-                            {agreement.filledAt
-                                ? `${agreement.amount} ${agreement.currency}`
-                                : <Clock className="w-6 h-6 mx-auto mb-1" />}
-                        </div>
-                        <div className="text-sm text-tertiary-600">
-                            {agreement.filledAt ? 'Filled Amount' : 'To be filled'}
-                        </div>
-                    </div>
-                    {/* Released Amount */}
-                    {agreement.status === AgreementStatus.released && (   
-                        <div className="bg-secondary-50 border border-secondary-200 rounded-lg p-4 text-center">
-                            <div className="text-2xl font-bold text-secondary-700">
-                                {agreement.releasedAt
-                                    ? `${agreement.releasedAmount} ${agreement.currency}`
-                                    : <Clock className="w-6 h-6 mx-auto mb-1" />}
-                            </div>
-                            <div className="text-sm text-secondary-600">
-                                {agreement.releasedAt ? 'Released Amount' : 'To be released'}
-                            </div>
-                        </div>
-                    )}
-                    {/* Dispute Proposed Release Amount */}
-                    {agreement.status === AgreementStatus.disputed && (
-                    <div className="bg-accent-50 border border-accent-200 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-accent-700">
-                            {agreement.proposedAmount} {agreement.currency}
-                        </div>
-                            <div className="text-sm text-accent-600">Proposed Release Amount</div>
-                        </div>
-                    )}
-                </div>
-
-                <div className="space-y-4">
-                    <h4 className="font-semibold flex items-center">
-                        <Lock className="w-4 h-4 mr-2" />
-                        Agreement Details
-                    </h4>
-
-                    <div>
-                        <span className="text-muted-foreground text-sm">Description:</span>
-                        <div className="font-medium mt-1 text-md">
-                            {agreement.description}
-                        </div>
-                    </div>
-
-                    {agreement.disputeReason && (
-                        <div>
-                            <span className="flex items-center gap-1 text-muted-foreground text-sm"><AlertCircle className="w-4 h-4 text-accent-500" />Dispute Reason:</span>
-                            <div className="font-medium mt-1 text-md">
-                                {agreement.disputeReason}
-                            </div>
-                        </div>
-                    )}
-
-                    <Separator />
-                    <h4 className="font-semibold flex items-center">
-                        <Network className="w-4 h-4 mr-1" />
-                        Contract Information
-                    </h4>
-
-                    <div>
-                        <span className="text-muted-foreground text-sm">Network:</span>
-                        <div className="font-medium mt-1 text-md">
-                            {getNetworkDisplayName(agreement.networkId as SupportedNetworkIds)}
-                        </div>
-                    </div>
-                    <div className="text-sm">
-                        <span className="text-muted-foreground">Contract Address:</span>
-                        <div onClick={() => copyAddressToClipboard(agreement.contractAddress, "Contract Address")} className="font-mono bg-muted p-2 rounded mt-1 break-all cursor-pointer">
-                            {agreement.contractAddress}
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                        <div>
-                            <span className="text-muted-foreground">Creator Address:</span>
-                            <div onClick={() => copyAddressToClipboard(agreement.creator, "Creator Address")} className="font-mono bg-muted p-2 rounded mt-1 break-all cursor-pointer">
-                                {agreement.creator}
-                            </div>
-                        </div>
-                        {isDepositor && <div>
-                            <span className="text-muted-foreground">Depositor Address:</span>
-                            <div onClick={() => copyAddressToClipboard(agreement.depositor, "Depositor Address")} className="font-mono bg-muted p-2 rounded mt-1 break-all cursor-pointer">
-                                {agreement.depositor}
-                            </div>
-                        </div>}
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-    )
+                <div className="mt-3 break-all font-mono text-sm leading-7 text-foreground">{agreement.depositor}</div>
+              </button>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }

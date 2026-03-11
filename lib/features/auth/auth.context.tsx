@@ -31,32 +31,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Initialize auth state based on wallet connection
   useEffect(() => {
     if (wallet.isConnected && wallet.address) {
+      const selectedNetworkId = (wallet.selectedNetworkId as SupportedNetworkIds) || SupportedNetworkIds.polygon;
       const newUser: User = {
         address: wallet.address,
         isConnected: true,
-        networkId: wallet.selectedNetworkId as SupportedNetworkIds,
+        networkId: selectedNetworkId,
       };
       
-      if (!isAuthenticated || user?.address !== wallet.address) {
+      if (
+        !isAuthenticated ||
+        user?.address !== wallet.address ||
+        user?.networkId !== selectedNetworkId
+      ) {
         setUser(newUser);
         setIsAuthenticated(true);
         setIsAuthLoading(false);
         setError(null);
-
-        // Ensure correct network after authentication
-        wallet.ensureAmoyNetwork?.().then((onAmoy) => {
-          if (onAmoy === false) {
-            setError('Please switch to Polygon Amoy network');
-            toast.error('Please switch to Polygon Amoy network');
-          }
-        }).catch(console.warn);
       }
     } else if (!wallet.isConnected && isAuthenticated) {
       setUser(null);
       setIsAuthenticated(false);
       setError(null);
     }
-  }, [wallet.isConnected, wallet.address, isAuthenticated, user?.address, wallet.selectedNetworkId]);
+  }, [wallet.isConnected, wallet.address, isAuthenticated, user?.address, user?.networkId, wallet.selectedNetworkId]);
 
   const login = useCallback(async () => {
     setIsAuthLoading(true);

@@ -1,0 +1,24 @@
+- [ ] Cleanup the codebase
+- [ ] Improve performance (site is hanging at random times)
+- [ ] Migrate database from Supabase to Neon
+  - [ ] Provision Neon on Vercel and disable scale-to-zero
+  - [ ] Export Supabase and import into Neon
+  - [ ] Replace environment variables and validate dashboard flows
+- [ ] Create a Privacy page
+- [x] Create a Terms page
+- [x] Create a FAQ page
+  - [x] Add information of what networks are supported
+  - [x] Add information of what currencies are supported
+  - [x] Add information of what are the platform fees (0 fees)
+  - [x] Add information of how the contract works
+  - [x] Add information of how to create a contract
+  - [x] Add information of how to withdraw funds
+  - [x] Add information of how to cancel a contract
+  - [x] Add information of how to dispute a contract
+- [x] Create a Contact page
+
+- [ ] Redesign the website. Use best design practices. Make the website more appealing
+  - [ ] Upgrade Tailwind to v4 and stabilize the build
+  - [ ] Refactor theme variables and shared styling primitives
+  - [ ] Redesign all public pages and homepage content
+  - [ ] Restyle app flows without changing product functionality

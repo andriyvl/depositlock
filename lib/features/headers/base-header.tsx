@@ -13,18 +13,21 @@ interface BaseHeaderProps {
 
 export function BaseHeader({ children }: BaseHeaderProps) {
   return (
-    <header className="border-b sm:px-8 px-4 border-border/50 bg-background/0 backdrop-blur-sm sticky top-0 z-20">
-      <div className="mx-auto py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center sm:space-x-2 space-x-1">
-          <div className="w-6 sm:w-8 h-6 sm:h-8 bg-gradient-to-br from-primary-400 to-secondary-400 rounded-xl flex items-center justify-center">
-            <Lock className="w-3 sm:w-4 h-3 sm:h-4 text-white" />
-          </div>
-          <span className="font-bold text-lg sm:text-xl bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-            DepositLock
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/88 backdrop-blur-xl">
+      <div className="mx-auto flex min-h-[4.5rem] max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <Link href="/" className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xs">
+            <Lock className="h-4 w-4" />
+          </span>
+          <span className="flex flex-col">
+            <span className="text-lg font-semibold tracking-[-0.03em] text-foreground">DepositLock</span>
+            <span className="hidden text-xs uppercase tracking-[0.01em] text-muted-foreground sm:block">
+              App workspace
+            </span>
           </span>
         </Link>
-        <div className="h-10 flex items-center sm:space-x-3 space-x-1">
-          {children}
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          {children && <div className="hidden items-center gap-2 sm:flex">{children}</div>}
           <ConnectWallet />
         </div>
       </div>

@@ -4,8 +4,7 @@ import { writeToClipboard } from "@/lib/helpers/clipboard.helpers";
 import { showToast } from "@/lib/features/shared/components/show-toast";
 import { getReadonlyProvider } from '@/lib/features/web3/provider/appkit.client';
 import { escrowABI } from '@/lib/model/escrow.config';
-import { getNetworkFromChainId } from "@/lib/helpers/network.helpers";
-import { getDefaultCurrency, SupportedNetworkIds } from '@/lib/model/network.config';
+import { getDefaultCurrency, getNetworkDisplayName, SupportedNetworkIds } from '@/lib/model/network.config';
 
 /**
  * Helper function to copy an address to clipboard with toast notifications
@@ -121,7 +120,7 @@ export function mapToAgreement(
         id: contractAddress,
         contractAddress,
         statusName: AGREEMENT_STATUS[status],
-        networkName: getNetworkFromChainId(Number(networkId)),
+        networkName: getNetworkDisplayName(networkId),
         role,
         counterparty,
         createdAt: dbContract.createdAt,
@@ -197,8 +196,12 @@ export function formatAddress(address: string, startChars: number = 6, endChars:
 
 
 
-export async function verifyUserRole(contractAddress: string, userAddress: string): Promise<'creator' | 'depositor' | null> {
-    const provider = getReadonlyProvider();
+export async function verifyUserRole(
+  contractAddress: string,
+  userAddress: string,
+  networkId: SupportedNetworkIds = SupportedNetworkIds.polygon
+): Promise<'creator' | 'depositor' | null> {
+    const provider = getReadonlyProvider(networkId);
     const contract = new ethers.Contract(contractAddress, escrowABI, provider);
 
     const [creator, depositor] = await Promise.all([

@@ -1,18 +1,19 @@
 
-
+import { useCallback } from 'react';
 import { mapToAgreement, verifyUserRole } from '@/lib/helpers/contract.helpers';
 import { User, UserDatabaseContract } from '@/lib/model/agreement.types';
-import { getContracts } from './db-contracts/contracts.actions';
+import { SupportedNetworkIds } from '@/lib/model/network.config';
+import { addContract as addContractAction, getContracts } from './db-contracts/contracts.actions';
 import { useAppStore } from '../store/app.store';
 import { useContract } from './contract.hook';
 
-export function useAgreement(contractAddress: string, user: User) {
+export function useAgreement(contractAddress: string, user: User | null) {
   const { getContract } = useContract();
 
   const { setCurrentAgreement, setCurrentAgreementLoading, setCurrentAgreementError } = useAppStore();
 
 
-  async function fetchAgreement() {
+  const fetchAgreement = useCallback(async () => {
     if (!contractAddress) {
       setCurrentAgreement(null);
       setCurrentAgreementLoading(false);
@@ -24,18 +25,32 @@ export function useAgreement(contractAddress: string, user: User) {
     setCurrentAgreement(null);
 
     try {
-      const blockchainContract = await getContract(contractAddress);
-      
       let userDbContract: UserDatabaseContract | undefined;
       if (user?.address) {
           const dbContracts = await getContracts(user.address);
           userDbContract = dbContracts.find(c => c.contractAddress.toLowerCase() === contractAddress.toLowerCase());
       }
 
+      const preferredNetworkId =
+        userDbContract?.networkId || user?.networkId || SupportedNetworkIds.polygon;
+      const blockchainContract = await getContract(contractAddress, preferredNetworkId);
+
       if (!userDbContract) {
           let role: 'creator' | 'depositor' | null = null;
           if (user?.address) {
-              role = await verifyUserRole(contractAddress, user.address);
+              role = await verifyUserRole(contractAddress, user.address, blockchainContract.networkId);
+          }
+
+          if (role && user?.address) {
+              try {
+                  await addContractAction(user.address, {
+                      contractAddress: contractAddress.toLowerCase(),
+                      role,
+                      networkId: blockchainContract.networkId,
+                  });
+              } catch (persistError) {
+                  console.warn('Failed to persist discovered contract to dashboard:', persistError);
+              }
           }
 
           userDbContract = {
@@ -56,7 +71,15 @@ export function useAgreement(contractAddress: string, user: User) {
     } finally {
       setCurrentAgreementLoading(false);
     }
-  }
+  }, [
+    contractAddress,
+    getContract,
+    setCurrentAgreement,
+    setCurrentAgreementError,
+    setCurrentAgreementLoading,
+    user?.address,
+    user?.networkId,
+  ]);
 
   return { fetchAgreement };
 }

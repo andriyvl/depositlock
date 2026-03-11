@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../auth/auth.hook';
 import { useAppStore } from '../store/app.store';
 import { getContracts } from './db-contracts/contracts.actions';
 import { mapToAgreement } from '@/lib/helpers/contract.helpers';
@@ -29,7 +28,7 @@ export function useAgreements({user}: {user: User | null}) {
 
       const agreementPromises = dbContracts.map(async (dbContract) => {
         try {
-          const blockchainContract = await getContract(dbContract.contractAddress);
+          const blockchainContract = await getContract(dbContract.contractAddress, dbContract.networkId);
           return mapToAgreement(dbContract, blockchainContract, user.address);
         } catch (e) {
           console.error(`Failed to fetch blockchain data for ${dbContract.contractAddress}`, e);
@@ -47,7 +46,7 @@ export function useAgreements({user}: {user: User | null}) {
     } finally {
       setLoading(false);
     }
-  }, [user?.address, setAgreements, setUserDatabaseContracts]);
+  }, [getContract, setAgreements, setUserDatabaseContracts, user?.address]);
 
   return { agreements, loading, error, fetchAgreements };
 }

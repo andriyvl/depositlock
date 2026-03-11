@@ -1,46 +1,45 @@
 :host, :root {
     --font-family-system-fallback: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
-    /* FONT SIZES / LINE HEIGHTS*/
-    --font-size-xs: 10px;
+    --font-size-xs: 12px;
     --line-height-xs: 18px;
 
-    --font-size-sm: 12px;
-    --line-height-sm: 20px;
+    --font-size-sm: 14px;
+    --line-height-sm: 22px;
 
-    --font-size-base: 14px;
-    --line-height-base: 24px;
+    --font-size-base: 16px;
+    --line-height-base: 26px;
 
-    --font-size-md: 16px;
-    --line-height-md: 26px;
+    --font-size-md: 18px;
+    --line-height-md: 28px;
 
-    --font-size-lg: 18px;
-    --line-height-lg: 28px;
+    --font-size-lg: 20px;
+    --line-height-lg: 30px;
 
-    --font-size-xl: 20px;
-    --line-height-xl: 30px;
+    --font-size-xl: 24px;
+    --line-height-xl: 34px;
 
-    --font-size-2xl: 22px;
-    --line-height-2xl: 32px;
+    --font-size-2xl: 28px;
+    --line-height-2xl: 38px;
 
-    --font-size-3xl: 24px;
-    --line-height-3xl: 34px;
+    --font-size-3xl: 32px;
+    --line-height-3xl: 42px;
 
-    --font-size-h1: 78px;
-    --line-height-h1: 78px;
+    --font-size-h1: clamp(56px, 8vw, 104px);
+    --line-height-h1: 0.92;
 
-    --font-size-h2: 56px;
-    --line-height-h2: 56px;
+    --font-size-h2: clamp(40px, 6vw, 72px);
+    --line-height-h2: 0.95;
 
-    --font-size-h3: 44px;
-    --line-height-h3: 44px;
+    --font-size-h3: clamp(32px, 4.5vw, 56px);
+    --line-height-h3: 0.98;
 
-    --font-size-h4: 40px;
-    --line-height-h4: 40px;
+    --font-size-h4: clamp(28px, 4vw, 44px);
+    --line-height-h4: 1;
 
-    --font-size-h5: 34px;
-    --line-height-h5: 34px;
+    --font-size-h5: 32px;
+    --line-height-h5: 1.02;
 
-    --font-size-h6: 28px;
-    --line-height-h6: 28px;
+    --font-size-h6: 24px;
+    --line-height-h6: 1.08;
 }

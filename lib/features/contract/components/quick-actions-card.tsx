@@ -7,9 +7,9 @@ import Link from "next/link";
 
 export const QuickActionsCard = ({ agreement, contractId }: { agreement: Agreement, contractId: string }) => {
     return (
-        <Card className="shadow-lg border-0 bg-background/80 backdrop-blur-sm">
+        <Card className="bg-white/86">
         <CardHeader>
-          <CardTitle className="text-lg">Quick Actions</CardTitle>
+          <CardTitle className="text-3xl">Quick actions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <Button variant="outline" className="w-full justify-start" asChild>

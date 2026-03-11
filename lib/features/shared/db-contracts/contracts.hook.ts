@@ -42,16 +42,11 @@ export function useContracts() {
   const addContract = useCallback(
     async (contract: Omit<UserDatabaseContract, 'createdAt'>) => {
       if (!auth.user?.address) {
-        console.error('❌ useContracts: No user address, cannot add contract');
-        return;
+        throw new Error('No user address, cannot add contract');
       }
-      try {
-        await addContractAction(auth.user.address, contract);
-        // Re-fetch contracts to update the state
-        await loadUserContracts();
-      } catch (error) {
-        console.error('Failed to add contract', error);
-      }
+      await addContractAction(auth.user.address, contract);
+      // Re-fetch contracts to update the state
+      await loadUserContracts();
     },
     [auth.user?.address, loadUserContracts]
   );

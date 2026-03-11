@@ -14,10 +14,10 @@ export const ContractEventBanner = ({ agreement }: { agreement: Agreement }) => 
     return (
         <>
         {showDeposit && (
-            <Card className="mb-8 shadow-lg border-0 bg-gradient-to-r from-primary-500 to-tertiary-500 text-white">
+            <Card className="mb-6 border-0 bg-primary text-primary-foreground">
               <CardContent className="py-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
                     <CheckCircle className="w-6 h-6" />
                   </div>
                   <div>
@@ -30,10 +30,10 @@ export const ContractEventBanner = ({ agreement }: { agreement: Agreement }) => 
           )}
 
           {showDispute && (
-            <Card className="mb-8 shadow-lg border-0 bg-gradient-to-r from-accent-500 to-destructive text-white">
+            <Card className="mb-6 border-0 bg-destructive text-white">
               <CardContent className="py-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/16">
                     <AlertCircle className="w-6 h-6" />
                   </div>
                   <div>
@@ -46,10 +46,10 @@ export const ContractEventBanner = ({ agreement }: { agreement: Agreement }) => 
           )}
   
           {showRelease && (
-            <Card className="mb-8 shadow-lg border-0 bg-gradient-to-r from-secondary-500 to-tertiary-500 text-white">
+            <Card className="mb-6 border-0 bg-secondary text-white">
               <CardContent className="py-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/12">
                     <CheckCircle className="w-6 h-6" />
                   </div>
                   <div>
@@ -62,10 +62,10 @@ export const ContractEventBanner = ({ agreement }: { agreement: Agreement }) => 
             </Card>
           )}
           {showCancel && (
-            <Card className="mb-8 shadow-lg border-0 bg-gradient-to-r from-accent-500 to-destructive text-white">
+            <Card className="mb-6 border-0 bg-muted-800 text-white">
               <CardContent className="py-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/12">
                     <CheckCircle className="w-6 h-6" />
           
                   </div>
