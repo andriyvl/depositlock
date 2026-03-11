@@ -77,7 +77,7 @@ export const metadata: Metadata = buildPageMetadata({
 
 function HeroEthereumVisual() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-[-10rem] flex justify-center sm:bottom-[-20rem] lg:bottom-[-25rem]">
+    <div className="pointer-events-none absolute inset-x-0 bottom-[-7rem] flex justify-center sm:bottom-[-20rem] lg:bottom-[-25rem]">
       <div className="hero-ethereum-float relative h-[20rem] w-[20rem] sm:h-[36rem] sm:w-[36rem] lg:h-[44rem] lg:w-[44rem]">
         <div className="absolute inset-x-[18%] bottom-[7%] h-[9%] rounded-full bg-secondary-900/14 blur-3xl" />
         <div className="absolute inset-x-[26%] bottom-[18%] h-[12%] rounded-full bg-primary/18 blur-3xl" />
@@ -106,8 +106,8 @@ function HeroEthereumVisual() {
 export default function HomePage() {
   return (
     <div className="pb-24 sm:pb-28">
-      <section className="container pt-10 sm:pt-14">
-        <div className="relative overflow-hidden rounded-[3.25rem] bg-[linear-gradient(180deg,rgba(255,255,255,0.72)_0%,rgba(241,243,238,0.97)_100%)] px-6 pt-10 pb-[6rem] text-center shadow-card sm:px-10 sm:pt-14 sm:pb-[8rem] lg:px-16 lg:pt-16 lg:pb-[12rem]">
+      <section className="container pt-5 sm:pt-14">
+        <div className="relative overflow-hidden rounded-[2rem] bg-[linear-gradient(180deg,rgba(255,255,255,0.72)_0%,rgba(241,243,238,0.97)_100%)] px-6 pt-10 pb-[6rem] text-center shadow-card sm:px-10 sm:pt-14 sm:pb-[8rem] lg:px-16 lg:pt-16 lg:pb-[12rem]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(153,240,117,0.18),transparent_34%),radial-gradient(circle_at_50%_92%,rgba(255,255,255,0.82),transparent_38%)]" />
           <HeroEthereumVisual />
 
@@ -118,10 +118,8 @@ export default function HomePage() {
             <h1 className="mt-6 whitespace-pre-line font-display text-[clamp(3.8rem,11vw,7.9rem)] font-black text-foreground">
               {"Rental deposits,\non-chain."}
             </h1>
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-muted-foreground sm:text-[1.2rem]">
-              DepositLock helps small rental businesses create escrow contracts via crypto. Set the
-              amount and deadline, share one contract link, and keep funding and resolution visible
-              from start to finish.
+            <p className="mx-auto whitespace-pre-line mt-6 max-w-3xl text-sm leading-6 text-muted-foreground sm:text-[1.2rem]">
+              {"DepositLock helps small rental businesses manage escrow deposits via smart-contracts. \nCashless, paperless, hassle-free."}
             </p>
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -174,7 +172,7 @@ export default function HomePage() {
               const Icon = useCase.icon;
 
               return (
-                <article key={useCase.title} className="rounded-[1.875rem] border border-border/60 bg-white/88 p-6 shadow-card">
+                <article key={useCase.title} className="rounded-[2rem] border border-border/60 bg-white/88 p-6 shadow-card">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
                     <Icon className="h-5 w-5" />
                   </div>
@@ -204,7 +202,7 @@ export default function HomePage() {
           <div className="grid gap-4">
             <div className="grid gap-4 md:grid-cols-3">
               {keyFacts.map((item) => (
-                <article key={item.label} className="rounded-[1.75rem] border border-border/60 bg-white/88 p-5 shadow-card">
+                <article key={item.label} className="rounded-[2rem] border border-border/60 bg-white/88 p-5 shadow-card">
                   <p className="text-xs font-semibold uppercase tracking-[0.14em] text-secondary-700">
                     {item.label}
                   </p>
